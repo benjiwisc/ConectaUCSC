@@ -1,0 +1,18 @@
+# ─── Android ───────────────────────────────────────────
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/
+android/*.iml
+android/.idea/
+android/captures/
+
+# ─── Laravel ───────────────────────────────────────────
+backend/.env
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/*.log
+backend/.env.backup
+backend/.phpunit.result.cache
+backend/public/hot
+backend/public/storage
