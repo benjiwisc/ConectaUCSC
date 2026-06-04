@@ -3,11 +3,12 @@ package com.ucsc.conectaucsc.data.repository
 import com.ucsc.conectaucsc.data.model.AuthResponse
 import com.ucsc.conectaucsc.data.model.LoginRequest
 import com.ucsc.conectaucsc.data.model.RegisterRequest
-import com.ucsc.conectaucsc.data.remote.RetrofitClient
+import com.ucsc.conectaucsc.data.remote.AuthApiService
+import javax.inject.Inject
 
-class AuthRepository {
-    private val api = RetrofitClient.authApiService
-
+class AuthRepository @Inject constructor(
+    private val api: AuthApiService
+) {
     suspend fun login(email: String, password: String): Result<AuthResponse> {
         return try {
             val response = api.login(LoginRequest(email, password))
@@ -33,10 +34,11 @@ class AuthRepository {
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
-                Result.failure(Exception("Error al registrar usuario"))
+                val errorBody = response.errorBody()?.string() ?: "Error desconocido"
+                Result.failure(Exception("Error ${response.code()}: $errorBody")) // ← más detalle
             }
         } catch (e: Exception) {
-            Result.failure(Exception("Error de conexión"))
+            Result.failure(Exception("Error de conexión: ${e.message}")) // ← más detalle
         }
     }
 }

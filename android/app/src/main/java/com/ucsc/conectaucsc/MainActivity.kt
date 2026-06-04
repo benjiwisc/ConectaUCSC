@@ -1,25 +1,20 @@
 package com.ucsc.conectaucsc
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import com.ucsc.conectaucsc.databinding.ActivityMainBinding
-import com.ucsc.conectaucsc.utils.SessionManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.ucsc.conectaucsc.ui.navigation.Navigation
+import com.ucsc.conectaucsc.ui.theme.ConectaUCSCTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val sessionManager = SessionManager(this)
-        if (sessionManager.isLoggedIn()) {
-            val navHostFragment = supportFragmentManager
-                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            navHostFragment.navController.navigate(R.id.homeFragment)
+        setContent {
+            ConectaUCSCTheme {
+                Navigation()
+            }
         }
     }
 }
