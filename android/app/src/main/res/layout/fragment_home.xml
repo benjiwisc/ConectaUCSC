@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ConectaUCSC"
+        android:textSize="16sp"
+        android:layout_marginBottom="48dp"/>
+
+    <Button
+        android:id="@+id/btnMaterias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mis Materias"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnSesiones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sesiones de Estudio"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mi Perfil"
+        android:layout_marginBottom="48dp"/>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar sesión"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+</LinearLayout>

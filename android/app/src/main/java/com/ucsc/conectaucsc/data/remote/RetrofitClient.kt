@@ -12,9 +12,6 @@ object RetrofitClient {
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
-        .addInterceptor { chain ->
-            chain.proceed(chain.request())
-        }
         .build()
 
     val instance: Retrofit by lazy {
@@ -23,5 +20,9 @@ object RetrofitClient {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    val authApiService: AuthApiService by lazy {
+        instance.create(AuthApiService::class.java)
     }
 }
