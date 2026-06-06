@@ -16,3 +16,7 @@ backend/.env.backup
 backend/.phpunit.result.cache
 backend/public/hot
 backend/public/storage
+
+# ─── IDEs ──────────────────────────────────────────────
+.idea/
+*.iml
