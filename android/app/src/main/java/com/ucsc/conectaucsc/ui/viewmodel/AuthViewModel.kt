@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.ucsc.conectaucsc.data.model.Carrera
+import com.ucsc.conectaucsc.data.model.Facultad
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,10 +41,30 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun register(name: String, email: String, password: String, carrera: String?, facultad: String?) {
+    private val _facultades = MutableStateFlow<List<Facultad>>(emptyList())
+    val facultades: StateFlow<List<Facultad>> = _facultades
+
+    private val _carreras = MutableStateFlow<List<Carrera>>(emptyList())
+    val carreras: StateFlow<List<Carrera>> = _carreras
+
+
+    fun loadFacultades() {
+        viewModelScope.launch {
+            repository.getFacultades().onSuccess { _facultades.value = it }
+        }
+    }
+
+    fun loadCarreras(facultadId: Int) {
+        viewModelScope.launch {
+            _carreras.value = emptyList()
+            repository.getCarreras(facultadId).onSuccess { _carreras.value = it }
+        }
+    }
+
+    fun register(name: String, email: String, password: String, facultadId: Int?, carreraId: Int?) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = repository.register(name, email, password, carrera, facultad)
+            val result = repository.register(name, email, password, facultadId, carreraId)
             if (result.isSuccess) {
                 val data = result.getOrNull()!!
                 sessionManager.saveSession(data.token, data.user.id, data.user.name)

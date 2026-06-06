@@ -4,6 +4,8 @@ import com.ucsc.conectaucsc.data.model.AuthResponse
 import com.ucsc.conectaucsc.data.model.LoginRequest
 import com.ucsc.conectaucsc.data.model.RegisterRequest
 import com.ucsc.conectaucsc.data.remote.AuthApiService
+import com.ucsc.conectaucsc.data.model.Carrera
+import com.ucsc.conectaucsc.data.model.Facultad
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
@@ -22,23 +24,39 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun getFacultades(): Result<List<Facultad>> {
+        return try {
+            val response = api.getFacultades()
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar facultades"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun getCarreras(facultadId: Int): Result<List<Carrera>> {
+        return try {
+            val response = api.getCarreras(facultadId)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar carreras"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
     suspend fun register(
         name: String,
         email: String,
         password: String,
-        carrera: String?,
-        facultad: String?
+        facultadId: Int?,
+        carreraId: Int?
     ): Result<AuthResponse> {
         return try {
-            val response = api.register(RegisterRequest(name, email, password, carrera, facultad))
-            if (response.isSuccessful) {
-                Result.success(response.body()!!)
-            } else {
-                val errorBody = response.errorBody()?.string() ?: "Error desconocido"
-                Result.failure(Exception("Error ${response.code()}: $errorBody")) // ← más detalle
-            }
+            val response = api.register(RegisterRequest(name, email, password, facultadId, carreraId))
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al registrar usuario"))
         } catch (e: Exception) {
-            Result.failure(Exception("Error de conexión: ${e.message}")) // ← más detalle
+            Result.failure(Exception("Error de conexión"))
         }
     }
 }

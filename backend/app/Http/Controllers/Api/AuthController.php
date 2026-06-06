@@ -12,19 +12,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'carrera'  => 'nullable|string',
-            'facultad' => 'nullable|string',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:users',
+            'password'    => 'required|min:6',
+            'facultad_id' => 'nullable|exists:facultads,id',
+            'carrera_id'  => 'nullable|exists:carreras,id',
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'carrera'  => $request->carrera,
-            'facultad' => $request->facultad,
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'password'    => Hash::make($request->password),
+            'facultad_id' => $request->facultad_id,
+            'carrera_id'  => $request->carrera_id,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
