@@ -10,11 +10,13 @@ import com.ucsc.conectaucsc.ui.screens.LoginScreen
 import com.ucsc.conectaucsc.ui.screens.RegisterScreen
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import kotlinx.serialization.Serializable
+import com.ucsc.conectaucsc.ui.screens.MateriasScreen
 
 @Serializable object Login
 @Serializable object Register
 @Serializable object Home
 
+@Serializable object Materias
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -31,6 +33,9 @@ fun Navigation() {
         }
         composable<Home> {
             HomeScreen(viewModel = viewModel, navController = navController)
+        }
+        composable<Materias> {
+            MateriasScreen(navController = navController, authViewModel = viewModel)
         }
     }
 }

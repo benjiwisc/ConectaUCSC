@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.navigation.Login
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
+import com.ucsc.conectaucsc.ui.navigation.Materias
 
 @Composable
 fun HomeScreen(viewModel: AuthViewModel, navController: NavController) {
@@ -35,7 +36,7 @@ fun HomeScreen(viewModel: AuthViewModel, navController: NavController) {
         )
 
         Button(
-            onClick = { },
+            onClick = { navController.navigate(Materias) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Mis Materias")

@@ -10,23 +10,35 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
+import com.ucsc.conectaucsc.data.remote.MateriaApiService
+import android.content.Context
+import com.ucsc.conectaucsc.utils.SessionManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideSessionManager(@ApplicationContext context: Context): SessionManager {
+        return SessionManager(context)
+    }
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(sessionManager: SessionManager): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            .addInterceptor { chain ->                          // ← AGREGAR ESTO
-                val request = chain.request().newBuilder()
-                    .addHeader("Accept", "application/json")
-                    .addHeader("Content-Type", "application/json")
-                    .build()
+            .addInterceptor { chain ->
+                val token = sessionManager.getToken()
+                val request = if (token != null) {
+                    chain.request().newBuilder()
+                        .addHeader("Authorization", "Bearer $token")
+                        .build()
+                } else {
+                    chain.request()
+                }
                 chain.proceed(request)
             }
             .build()
@@ -46,5 +58,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
         return retrofit.create(AuthApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMateriaApiService(retrofit: Retrofit): MateriaApiService {
+        return retrofit.create(MateriaApiService::class.java)
     }
 }
