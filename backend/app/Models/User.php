@@ -23,4 +23,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    
+    public function materias()
+    {
+        return $this->belongsToMany(Materia::class, 'usuario_materias');
+    }
 }

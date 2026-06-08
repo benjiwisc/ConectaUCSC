@@ -15,7 +15,6 @@ class FacultadCarreraSeeder extends Seeder
                 'Ingeniería Civil Informática',
                 'Ingeniería Civil Industrial',
                 'Ingeniería Civil Eléctrica',
-                'Ingeniería Civil Mecánica',
             ],
             'Facultad de Ciencias' => [
                 'Bioquímica',
