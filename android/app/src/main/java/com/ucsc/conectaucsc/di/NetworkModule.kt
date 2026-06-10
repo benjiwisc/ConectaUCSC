@@ -32,14 +32,13 @@ object NetworkModule {
             })
             .addInterceptor { chain ->
                 val token = sessionManager.getToken()
-                val request = if (token != null) {
-                    chain.request().newBuilder()
-                        .addHeader("Authorization", "Bearer $token")
-                        .build()
-                } else {
-                    chain.request()
+                val requestBuilder = chain.request().newBuilder()
+                    .addHeader("Accept", "application/json")
+                
+                if (token != null) {
+                    requestBuilder.addHeader("Authorization", "Bearer $token")
                 }
-                chain.proceed(request)
+                chain.proceed(requestBuilder.build())
             }
             .build()
     }

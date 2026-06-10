@@ -17,7 +17,14 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
-                Result.failure(Exception("Credenciales incorrectas"))
+                val errorMsg = try {
+                    val errorJson = response.errorBody()?.string() ?: ""
+                    val jsonObject = org.json.JSONObject(errorJson)
+                    jsonObject.optString("message", "Credenciales incorrectas")
+                } catch (e: Exception) {
+                    "Credenciales incorrectas"
+                }
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión"))
@@ -53,8 +60,18 @@ class AuthRepository @Inject constructor(
     ): Result<AuthResponse> {
         return try {
             val response = api.register(RegisterRequest(name, email, password, facultadId, carreraId))
-            if (response.isSuccessful) Result.success(response.body()!!)
-            else Result.failure(Exception("Error al registrar usuario"))
+            if (response.isSuccessful) {
+                Result.success(response.body()!!)
+            } else {
+                val errorMsg = try {
+                    val errorJson = response.errorBody()?.string() ?: ""
+                    val jsonObject = org.json.JSONObject(errorJson)
+                    jsonObject.optString("message", "Error al registrar usuario")
+                } catch (e: Exception) {
+                    "Error al registrar usuario"
+                }
+                Result.failure(Exception(errorMsg))
+            }
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión"))
         }
