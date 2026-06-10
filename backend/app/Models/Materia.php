@@ -17,4 +17,8 @@ class Materia extends Model
     {
         return $this->belongsToMany(User::class, 'usuario_materias');
     }
+    
+    public function record() {
+        return $this->hasOne(Record::class);
+    }
 }

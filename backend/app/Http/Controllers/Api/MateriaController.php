@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Materia;
+use App\Models\Record;
+use App\Models\UsuarioMateria;
+use App\Models\Attainment;
 use Illuminate\Http\Request;
 
 class MateriaController extends Controller
@@ -35,7 +38,32 @@ class MateriaController extends Controller
             return response()->json(['message' => 'Ya estás cursando esta materia'], 409);
         }
 
-        $user->materias()->attach($request->materia_id);
+        $usuarioMateria = UsuarioMateria::create([
+            'user_id' => $user->id,
+            'materia_id' => $request->materia_id,
+        ]);
+
+        $record = Record::create(['usuario_materia_id' => $usuarioMateria->id]);
+
+        $logros = [
+            ['tipo' => 'primer_paso',        'meta' => 1],
+            ['tipo' => 'constante',          'meta' => 5],
+            ['tipo' => 'maraton',            'meta' => 4],
+            ['tipo' => 'presente_siempre',   'meta' => 100],
+            ['tipo' => 'compromiso_medido',  'meta' => 75],
+            ['tipo' => 'asistencia_ejemplar','meta' => 90],
+            ['tipo' => 'leyendo_asistencia', 'meta' => 95],
+        ];
+
+        foreach ($logros as $logro) {
+            Attainment::create([
+                'record_id' => $record->id,
+                'tipo'      => $logro['tipo'],
+                'meta'      => $logro['meta'],
+                'progreso'  => 0,
+                'cumplido'  => false,
+            ]);
+        }
 
         return response()->json(['message' => 'Materia agregada correctamente']);
     }
