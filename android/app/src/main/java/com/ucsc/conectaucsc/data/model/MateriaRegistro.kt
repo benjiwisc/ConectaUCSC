@@ -1,6 +1,6 @@
 package com.ucsc.conectaucsc.data.model
 
-data class Record (
+data class MateriaRegistro (
     val id: Int,
     val usuario_materia_id: Int,
     val finalizado: Boolean,

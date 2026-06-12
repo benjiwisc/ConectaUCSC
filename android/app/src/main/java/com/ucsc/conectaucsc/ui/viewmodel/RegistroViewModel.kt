@@ -2,6 +2,7 @@ package com.ucsc.conectaucsc.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ucsc.conectaucsc.data.model.MateriaRegistro
 import com.ucsc.conectaucsc.data.repository.RegistroRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,8 +15,8 @@ class RegistroViewModel @Inject constructor(
     private val repository: RegistroRepository
 ) : ViewModel() {
 
-    private val _record = MutableStateFlow<Record?>(null)
-    val record: StateFlow<Record?> = _record
+    private val _record = MutableStateFlow<MateriaRegistro?>(null)
+    val record: StateFlow<MateriaRegistro?> = _record
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
