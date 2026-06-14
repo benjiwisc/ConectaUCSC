@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}',[GradeController::class, 'update']);
         Route::delete('/{id}',[GradeController::class, 'destroy']);
         Route::get('/{recordId}/promedio',[GradeController::class, 'promedio']);
+        Route::get('/{recordId}/nota-necesaria',[GradeController::class, 'notaNecesaria']);
     });
 
     Route::prefix('asistencias')->group(function () {

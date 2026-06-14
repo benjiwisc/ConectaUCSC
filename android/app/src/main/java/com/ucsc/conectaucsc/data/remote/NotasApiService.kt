@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.data.remote
 
 import com.ucsc.conectaucsc.data.model.Grade
+import com.ucsc.conectaucsc.data.model.NotaNecesariaResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -28,4 +29,6 @@ interface NotasApiService {
     @GET("notas/{recordId}/promedio")
     suspend fun getPromedio(@Path("recordId") recordId: Int): Response<Grade>
 
+    @GET("notas/{recordId}/nota-necesaria")
+    suspend fun getNotaNecesaria(@Path("recordId") recordId: Int): Response<NotaNecesariaResponse>
 }

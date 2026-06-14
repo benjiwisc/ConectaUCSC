@@ -18,6 +18,9 @@ class NotasViewModel @Inject constructor(
     private val _notas = MutableStateFlow<List<Grade>>(emptyList())
     val notas: StateFlow<List<Grade>> = _notas
 
+    private val _notaNecesaria = MutableStateFlow<com.ucsc.conectaucsc.data.model.NotaNecesariaResponse?>(null)
+    val notaNecesaria: StateFlow<com.ucsc.conectaucsc.data.model.NotaNecesariaResponse?> = _notaNecesaria
+
     private val _promedio = MutableStateFlow<Double?>(null)
     val promedio: StateFlow<Double?> = _promedio
 
@@ -37,6 +40,11 @@ class NotasViewModel @Inject constructor(
                 _notas.value = it
             }.onFailure {
                 _mensaje.value = it.message
+            }
+            repository.getNotaNecesaria(recordId).onSuccess {
+                _notaNecesaria.value = it
+            }.onFailure {
+                // Se ignora silenciosamente si falla para no arruinar la carga de notas
             }
             _isLoading.value = false
         }
@@ -77,7 +85,7 @@ class NotasViewModel @Inject constructor(
             _isLoading.value = true
             repository.updateNota(id, body).onSuccess {
                 _mensaje.value = "Nota actualizada correctamente"
-                cargarNotas(id)
+                cargarNotas(body.record_id)
             }.onFailure {
                 _mensaje.value = it.message
             }

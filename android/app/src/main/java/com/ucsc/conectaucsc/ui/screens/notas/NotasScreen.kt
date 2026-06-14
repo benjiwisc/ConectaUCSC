@@ -34,6 +34,7 @@ fun NotasScreen(
 ) {
     val context = LocalContext.current
     val notas by notasViewModel.notas.collectAsState()
+    val notaNecesaria by notasViewModel.notaNecesaria.collectAsState()
     val isLoading by notasViewModel.isLoading.collectAsState()
     val mensaje by notasViewModel.mensaje.collectAsState()
 
@@ -84,6 +85,11 @@ fun NotasScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    notaNecesaria?.let { nn ->
+                        item {
+                            NotaNecesariaCard(notaNecesaria = nn)
+                        }
+                    }
                     items(notas) { nota ->
                         CardNotaItem(
                             nota = nota,
@@ -91,6 +97,84 @@ fun NotasScreen(
                             onDeleteClick = { notasViewModel.deleteNota(nota.id, recordId) }
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun NotaNecesariaCard(notaNecesaria: com.ucsc.conectaucsc.data.model.NotaNecesariaResponse) {
+    val isComplete = notaNecesaria.porcentaje_restante <= 0
+    val highlightColor = if (isComplete) {
+        if (notaNecesaria.nota_acumulada >= 4.0) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.error
+    } else {
+        when (notaNecesaria.estado) {
+            "aprobado" -> MaterialTheme.colorScheme.primary
+            "reprobado" -> MaterialTheme.colorScheme.error
+            else -> MaterialTheme.colorScheme.secondary
+        }
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = if (isComplete) "Nota Final de la Asignatura" else "Resumen de Rendimiento",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = if (isComplete) "Porcentaje Evaluado" else "Nota Acumulada", 
+                        fontSize = 12.sp, 
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = if (isComplete) "100%" else String.format(java.util.Locale.US, "%.2f (%d%%)", notaNecesaria.nota_acumulada, notaNecesaria.porcentaje_acumulado),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = if (isComplete) "Nota Final" else "Requerido en lo Restante", 
+                        fontSize = 12.sp, 
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = if (isComplete) {
+                            String.format(java.util.Locale.US, "%.1f", notaNecesaria.nota_acumulada)
+                        } else {
+                            if (notaNecesaria.nota_necesaria != null) {
+                                String.format(java.util.Locale.US, "%.1f", notaNecesaria.nota_necesaria)
+                            } else {
+                                "N/A"
+                            }
+                        },
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Black,
+                        color = highlightColor
+                    )
                 }
             }
         }
@@ -114,7 +198,7 @@ fun CardNotaItem(nota: Grade, onEditClick: () -> Unit, onDeleteClick: () -> Unit
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = String.format("%.1f", nota.nota),
+                    text = String.format(java.util.Locale.US, "%.1f", nota.nota),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Black,
                     color = MaterialTheme.colorScheme.primary

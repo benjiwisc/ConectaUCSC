@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.data.repository
 
 import com.ucsc.conectaucsc.data.model.Grade
+import com.ucsc.conectaucsc.data.model.NotaNecesariaResponse
 import com.ucsc.conectaucsc.data.remote.NotasApiService
 import javax.inject.Inject
 
@@ -50,6 +51,16 @@ class NotasRepository  @Inject constructor(private val api: NotasApiService){
             val response = api.deleteNota(id)
             if (response.isSuccessful) Result.success(response.body()!!)
             else Result.failure(Exception("Error al eliminar nota"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun getNotaNecesaria(recordId: Int): Result<NotaNecesariaResponse> {
+        return try {
+            val response = api.getNotaNecesaria(recordId)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al calcular nota necesaria"))
         } catch (e: Exception) {
             Result.failure(Exception("Error de conexión"))
         }

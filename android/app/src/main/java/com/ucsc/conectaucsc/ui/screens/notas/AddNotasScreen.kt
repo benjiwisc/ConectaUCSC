@@ -36,7 +36,7 @@ fun AddNotasScreen(
         mensaje?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             notasViewModel.limpiarMensaje()
-            if (it.contains("éxito", true)) {
+            if (it.contains("éxito", true) || it.contains("correctamente", true) || it.contains("agregada", true)) {
                 navController.popBackStack()
             }
         }

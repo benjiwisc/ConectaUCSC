@@ -17,11 +17,22 @@ class GradeController extends Controller
     }
 
     public function store(Request $request) {
+        $nota = $request->input('nota');
+        if ($nota !== null) {
+            // Reemplazar coma por punto decimal
+            $nota = str_replace(',', '.', $nota);
+            // Si el valor es numérico y mayor a 7.0 (por ejemplo 70, 55, 40), dividir por 10
+            if (is_numeric($nota) && floatval($nota) > 7.0) {
+                $nota = floatval($nota) / 10;
+            }
+            $request->merge(['nota' => $nota]);
+        }
+
         $request->validate([
             'record_id'  => 'required|exists:records,usuario_materia_id',
             'evaluacion' => 'required|string',
             'porcentaje' => 'required|integer',
-            'nota'       => 'required|numeric|max:7',
+            'nota'       => 'required|numeric|min:1|max:7',
         ]);
         $grade = Grade::create($request->all());
         return response()->json($grade, 201);
@@ -29,10 +40,21 @@ class GradeController extends Controller
 
     public function update(Request $request, $id) {
         $grade = Grade::findOrFail($id);
+        $nota = $request->input('nota');
+        if ($nota !== null) {
+            // Reemplazar coma por punto decimal
+            $nota = str_replace(',', '.', $nota);
+            // Si el valor es numérico y mayor a 7.0, dividir por 10
+            if (is_numeric($nota) && floatval($nota) > 7.0) {
+                $nota = floatval($nota) / 10;
+            }
+            $request->merge(['nota' => $nota]);
+        }
+
         $request->validate([
             'evaluacion' => 'sometimes|string',
             'porcentaje' => 'sometimes|integer',
-            'nota'       => 'sometimes|numeric|max:7',
+            'nota'       => 'sometimes|numeric|min:1|max:7',
         ]);
         $grade->update($request->only('evaluacion', 'nota', 'porcentaje'));
         return response()->json($grade);
@@ -40,12 +62,63 @@ class GradeController extends Controller
 
     public function destroy($id) {
         Grade::findOrFail($id)->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Nota eliminada correctamente']);
     }
 
     // promedio de notas del record
     public function promedio($recordId) {
         $promedio = Grade::where('record_id', $recordId)->avg('nota');
         return response()->json(['promedio' => round($promedio, 1)]);
+    }
+
+    // calcula la nota necesaria para aprobar el ramo (con nota 4.0)
+    public function notaNecesaria($recordId) {
+        $grades = Grade::where('record_id', $recordId)->get();
+
+        $sumaPorcentajes = $grades->sum('porcentaje');
+        
+        // Calcular la nota acumulada ponderada
+        $notaAcumulada = $grades->sum(function ($grade) {
+            return $grade->nota * ($grade->porcentaje / 100);
+        });
+
+        $porcentajeRestante = 100 - $sumaPorcentajes;
+        $notaAprobacion = 4.0;
+        $notaNecesaria = 1.0;
+        $estado = 'cursando';
+
+        if ($porcentajeRestante <= 0) {
+            // Ya se ingresó el 100% de las ponderaciones
+            if ($notaAcumulada >= $notaAprobacion) {
+                $estado = 'aprobado';
+                $notaNecesaria = 1.0;
+            } else {
+                $estado = 'reprobado';
+                $notaNecesaria = null;
+            }
+        } else {
+            // Falta porcentaje por evaluar
+            $calculo = ($notaAprobacion - $notaAcumulada) / ($porcentajeRestante / 100);
+            $calculo = round($calculo, 1);
+
+            if ($calculo <= 1.0) {
+                $notaNecesaria = 1.0; // Nota mínima en Chile
+                $estado = 'aprobado'; // Ya está aprobado matemáticamente
+            } elseif ($calculo > 7.0) {
+                $notaNecesaria = $calculo; // Guardamos el cálculo para información
+                $estado = 'reprobado'; // Es matemáticamente imposible aprobar
+            } else {
+                $notaNecesaria = $calculo;
+                $estado = 'cursando';
+            }
+        }
+
+        return response()->json([
+            'nota_acumulada'      => round($notaAcumulada, 2),
+            'porcentaje_acumulado'=> $sumaPorcentajes,
+            'porcentaje_restante' => $porcentajeRestante,
+            'nota_necesaria'      => $notaNecesaria,
+            'estado'              => $estado,
+        ]);
     }
 }
