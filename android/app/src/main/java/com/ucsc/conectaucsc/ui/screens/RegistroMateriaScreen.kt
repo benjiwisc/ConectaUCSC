@@ -27,13 +27,15 @@ import com.ucsc.conectaucsc.ui.navigation.Asistencia
 import com.ucsc.conectaucsc.ui.navigation.Horario
 import com.ucsc.conectaucsc.ui.navigation.Logros
 import com.ucsc.conectaucsc.ui.navigation.Notas
-
+import com.ucsc.conectaucsc.ui.navigation.Sesiones
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistroMateriaScreen(
     navController: NavController,
-    registroId: Int
+    registroId: Int,
+    materiaId:Int,
+    nombreMateria:String
 ) {
     Scaffold(
         topBar = {
@@ -69,7 +71,9 @@ fun RegistroMateriaScreen(
                 "Asistencia" to Icons.Default.DateRange,
                 "Logros" to Icons.Default.Star,
                 "Notas" to Icons.Default.Edit,
-                "Horario" to Icons.Default.Schedule
+                "Horario" to Icons.Default.Schedule,
+                "Sesiones" to Icons.Default.Schedule
+
             )
 
             botones.forEach { (titulo, icono) ->
@@ -80,6 +84,7 @@ fun RegistroMateriaScreen(
                             "Horario" -> navController.navigate(Horario(registroId))
                             "Notas" -> navController.navigate(Notas(registroId))
                             "Logros" -> navController.navigate(Logros(registroId))
+                            "Sesiones" -> navController.navigate(Sesiones(materiaId, nombreMateria))
                         }
                     },
                     modifier = Modifier

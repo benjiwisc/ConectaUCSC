@@ -103,7 +103,7 @@ fun MateriasScreen(
                 items(misMaterias) { materia ->
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        onClick = { navController.navigate(RegistroMateria(materia.id_registro)) }
+                        onClick = { navController.navigate(RegistroMateria(materia.id_registro,materia.id, materia.nombre)) }
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(16.dp),
