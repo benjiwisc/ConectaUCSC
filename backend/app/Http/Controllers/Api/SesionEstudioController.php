@@ -87,4 +87,36 @@ class SesionEstudioController extends Controller
 
         return response()->json($sesiones);
     }
+    
+    // Salirse de una sesión
+    public function salirse(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if ($sesion->user_id === $user->id) {
+            return response()->json([
+                'message' => 'El creador no puede abandonar la sesión, debe finalizarla'
+            ], 403);
+        }
+
+        $sesion->participantes()->detach($user->id);
+        return response()->json(['message' => 'Has abandonado la sesión']);
+    }
+
+    // Finalizar sesión (solo el creador)
+    public function finalizar(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if ($sesion->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Solo el creador puede finalizar la sesión'
+            ], 403);
+        }
+
+        $sesion->delete();
+        return response()->json(['message' => 'Sesión finalizada y eliminada correctamente']);
+    }
 }

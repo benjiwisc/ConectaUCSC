@@ -32,6 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
     Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
     Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
+    
+    Route::delete('/sesiones/{id}/salirse', [SesionEstudioController::class, 'salirse']);
+    Route::delete('/sesiones/{id}/finalizar', [SesionEstudioController::class, 'finalizar']);
 
     Route::prefix('horarios')->group(function () {
         Route::get('/{recordId}',[ScheduleController::class, 'index']);

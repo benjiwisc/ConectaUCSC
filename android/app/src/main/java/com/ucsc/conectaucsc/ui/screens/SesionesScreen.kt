@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,7 +55,10 @@ fun SesionesScreen(
                 title = { Text(materiaNombre) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Volver"
+                        )
                     }
                 }
             )
@@ -77,17 +80,26 @@ fun SesionesScreen(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("No hay sesiones para esta materia.\nPresiona + para crear una.", fontSize = 16.sp)
+                Text(
+                    "No hay sesiones para esta materia.\nPresiona + para crear una.",
+                    fontSize = 16.sp
+                )
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
             ) {
                 items(sesiones) { sesion ->
                     SesionCard(
                         sesion = sesion,
                         userId = userId,
-                        onUnirse = { sesionViewModel.unirse(sesion.id) }
+                        materiaId = materiaId,
+                        onUnirse = { sesionViewModel.unirse(sesion.id, materiaId) },
+                        onSalirse = { sesionViewModel.salirse(sesion.id, materiaId) },
+                        onFinalizar = { sesionViewModel.finalizar(sesion.id, materiaId) }
                     )
                 }
             }
@@ -99,45 +111,76 @@ fun SesionesScreen(
 fun SesionCard(
     sesion: SesionEstudio,
     userId: Int,
-    onUnirse: () -> Unit
+    materiaId: Int,
+    onUnirse: () -> Unit,
+    onSalirse: () -> Unit,
+    onFinalizar: () -> Unit
 ) {
     val yaParticipa = sesion.participantes?.any { it.id == userId } == true
+    val esCreador = sesion.user_id == userId
 
     Card(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(sesion.titulo, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = sesion.titulo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text("📍 ${sesion.lugar}", fontSize = 14.sp)
-            Text("📅 ${sesion.fecha_hora}", fontSize = 14.sp)
+            Text(
+                text = "Lugar: ${sesion.lugar}",
+                fontSize = 14.sp
+            )
+            Text(
+                text = "Fecha: ${sesion.fecha_hora}",
+                fontSize = 14.sp
+            )
             sesion.descripcion?.let {
-                Text("📝 $it", fontSize = 14.sp)
+                Text(
+                    text = "Descripcion: $it",
+                    fontSize = 14.sp
+                )
             }
             Text(
-                "👤 Creado por: ${sesion.creador?.name ?: "Desconocido"}",
+                text = "Creado por: ${sesion.creador?.name ?: "Desconocido"}",
                 fontSize = 13.sp,
                 modifier = Modifier.padding(top = 4.dp)
             )
             Text(
-                "👥 Participantes: ${sesion.participantes?.size ?: 0}",
+                text = "Participantes: ${sesion.participantes?.size ?: 0}",
                 fontSize = 13.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
-            if (!yaParticipa) {
-                Button(
-                    onClick = onUnirse,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Unirse a la sesión")
+
+            when {
+                esCreador -> {
+                    Button(
+                        onClick = onFinalizar,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Finalizar sesión")
+                    }
                 }
-            } else {
-                OutlinedButton(
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = false
-                ) {
-                    Text("Ya eres participante")
+                yaParticipa -> {
+                    OutlinedButton(
+                        onClick = onSalirse,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Abandonar sesión")
+                    }
+                }
+                else -> {
+                    Button(
+                        onClick = onUnirse,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Unirse a la sesión")
+                    }
                 }
             }
         }

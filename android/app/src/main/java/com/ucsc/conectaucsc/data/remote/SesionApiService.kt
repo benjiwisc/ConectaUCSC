@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.DELETE
 
 interface SesionApiService {
     @GET("materias/{id}/sesiones")
@@ -20,4 +21,10 @@ interface SesionApiService {
 
     @GET("mis-sesiones")
     suspend fun getMisSesiones(): Response<List<SesionEstudio>>
+
+    @DELETE("sesiones/{id}/salirse")
+    suspend fun salirse(@Path("id") sesionId: Int): Response<Map<String, String>>
+
+    @DELETE("sesiones/{id}/finalizar")
+    suspend fun finalizar(@Path("id") sesionId: Int): Response<Map<String, String>>
 }

@@ -63,10 +63,11 @@ class SesionViewModel @Inject constructor(
         }
     }
 
-    fun unirse(sesionId: Int) {
+    fun unirse(sesionId: Int, materiaId: Int) {
         viewModelScope.launch {
             repository.unirse(sesionId).onSuccess {
                 _mensaje.value = it
+                cargarSesionesPorMateria(materiaId)
             }.onFailure {
                 _mensaje.value = it.message
             }
@@ -80,6 +81,28 @@ class SesionViewModel @Inject constructor(
                 _misSesiones.value = it
             }
             _isLoading.value = false
+        }
+    }
+
+    fun salirse(sesionId: Int, materiaId: Int) {
+        viewModelScope.launch {
+            repository.salirse(sesionId).onSuccess {
+                _mensaje.value = it
+                cargarSesionesPorMateria(materiaId)
+            }.onFailure {
+                _mensaje.value = it.message
+            }
+        }
+    }
+
+    fun finalizar(sesionId: Int, materiaId: Int) {
+        viewModelScope.launch {
+            repository.finalizar(sesionId).onSuccess {
+                _mensaje.value = it
+                cargarSesionesPorMateria(materiaId)
+            }.onFailure {
+                _mensaje.value = it.message
+            }
         }
     }
 

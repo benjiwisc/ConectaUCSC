@@ -47,4 +47,24 @@ class SesionRepository @Inject constructor(
             Result.failure(Exception("Error de conexión"))
         }
     }
+
+    suspend fun salirse(sesionId: Int): Result<String> {
+        return try {
+            val response = api.salirse(sesionId)
+            if (response.isSuccessful) Result.success("Has abandonado la sesión")
+            else Result.failure(Exception("Error al abandonar la sesión"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun finalizar(sesionId: Int): Result<String> {
+        return try {
+            val response = api.finalizar(sesionId)
+            if (response.isSuccessful) Result.success("Sesión finalizada correctamente")
+            else Result.failure(Exception("Error al finalizar la sesión"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
 }
