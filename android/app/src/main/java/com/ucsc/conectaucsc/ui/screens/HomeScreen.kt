@@ -43,7 +43,7 @@ fun HomeScreen(viewModel: AuthViewModel, navController: NavController) {
         }
 
         Button(
-            onClick = { },
+            onClick = { navController.navigate(Materias) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Sesiones de Estudio")

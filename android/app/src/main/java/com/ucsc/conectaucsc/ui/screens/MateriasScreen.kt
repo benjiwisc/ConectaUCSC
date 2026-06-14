@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.MateriaViewModel
+import com.ucsc.conectaucsc.ui.navigation.Sesiones
 
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import com.ucsc.conectaucsc.ui.navigation.RegistroMateria

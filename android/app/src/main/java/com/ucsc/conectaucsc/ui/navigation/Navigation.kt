@@ -26,6 +26,9 @@ import com.ucsc.conectaucsc.ui.viewmodel.AsistenciasViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.HorariosViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.LogrosViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.NotasViewModel
+import com.ucsc.conectaucsc.ui.screens.SesionesScreen
+import com.ucsc.conectaucsc.ui.screens.CrearSesionScreen
+import androidx.navigation.toRoute
 
 @Serializable object Login
 @Serializable object Register
@@ -43,6 +46,9 @@ data class RegistroMateria(val registroId: Int)
 @Serializable data class Notas(val registroId: Int)
 @Serializable data class AddNotas(val registroId: Int)
 @Serializable data class EditNotas(val registroId: Int, val notaId: Int)
+
+@Serializable data class Sesiones(val materiaId: Int, val materiaNombre: String)
+@Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -113,6 +119,22 @@ fun Navigation() {
             val Logros: Logros = backStackEntry.toRoute()
             LogrosScreen(navController = navController, Logros.registroId,
                 viewModel_logros)
+        composable<Sesiones> { backStackEntry ->
+            val route: Sesiones = backStackEntry.toRoute()
+            SesionesScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController,
+                authViewModel = viewModel
+            )
+        }
+        composable<CrearSesion> { backStackEntry ->
+            val route: CrearSesion = backStackEntry.toRoute()
+            CrearSesionScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController
+            )
         }
     }
 }

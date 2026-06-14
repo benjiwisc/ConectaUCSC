@@ -1,0 +1,122 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\SesionEstudio;
+use Illuminate\Http\Request;
+
+class SesionEstudioController extends Controller
+{
+    // Listar sesiones por materia
+    public function porMateria(Request $request, $materiaId)
+    {
+        $user = $request->user();
+
+        // Verificar que el usuario cursa esa materia
+        if (!$user->materias()->where('materia_id', $materiaId)->exists()) {
+            return response()->json([
+                'message' => 'No tienes acceso a las sesiones de esta materia'
+            ], 403);
+        }
+
+        $sesiones = SesionEstudio::with(['creador:id,name', 'participantes:id,name'])
+            ->where('materia_id', $materiaId)
+            ->orderBy('fecha_hora')
+            ->get();
+
+        return response()->json($sesiones);
+    }
+
+    // Crear sesión
+    public function crear(Request $request)
+    {
+        $request->validate([
+            'titulo'      => 'required|string|max:255',
+            'lugar'       => 'required|string|max:255',
+            'fecha_hora'  => 'required|date',
+            'descripcion' => 'nullable|string',
+            'materia_id'  => 'required|exists:materias,id',
+        ]);
+
+        // Verificar que el usuario cursa esa materia
+        $user = $request->user();
+        if (!$user->materias()->where('materia_id', $request->materia_id)->exists()) {
+            return response()->json([
+                'message' => 'No puedes crear una sesión para una materia que no cursas'
+            ], 403);
+        }
+
+        $sesion = SesionEstudio::create([
+            'titulo'      => $request->titulo,
+            'lugar'       => $request->lugar,
+            'fecha_hora'  => $request->fecha_hora,
+            'descripcion' => $request->descripcion,
+            'materia_id'  => $request->materia_id,
+            'user_id'     => $user->id,
+        ]);
+
+        // El creador se une automáticamente
+        $sesion->participantes()->attach($user->id);
+
+        return response()->json($sesion->load(['creador:id,name', 'participantes:id,name']), 201);
+    }
+
+    // Unirse a una sesión
+    public function unirse(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if ($sesion->participantes()->where('user_id', $user->id)->exists()) {
+            return response()->json(['message' => 'Ya eres participante de esta sesión'], 409);
+        }
+
+        $sesion->participantes()->attach($user->id);
+
+        return response()->json(['message' => 'Te has unido a la sesión correctamente']);
+    }
+
+    // Mis sesiones creadas
+    public function misSesiones(Request $request)
+    {
+        $sesiones = SesionEstudio::with(['materia:id,nombre', 'participantes:id,name'])
+            ->where('user_id', $request->user()->id)
+            ->orderBy('fecha_hora')
+            ->get();
+
+        return response()->json($sesiones);
+    }
+    
+    // Salirse de una sesión
+    public function salirse(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if ($sesion->user_id === $user->id) {
+            return response()->json([
+                'message' => 'El creador no puede abandonar la sesión, debe finalizarla'
+            ], 403);
+        }
+
+        $sesion->participantes()->detach($user->id);
+        return response()->json(['message' => 'Has abandonado la sesión']);
+    }
+
+    // Finalizar sesión (solo el creador)
+    public function finalizar(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if ($sesion->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Solo el creador puede finalizar la sesión'
+            ], 403);
+        }
+
+        $sesion->delete();
+        return response()->json(['message' => 'Sesión finalizada y eliminada correctamente']);
+    }
+}
