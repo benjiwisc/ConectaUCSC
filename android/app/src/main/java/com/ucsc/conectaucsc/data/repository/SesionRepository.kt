@@ -67,4 +67,14 @@ class SesionRepository @Inject constructor(
             Result.failure(Exception("Error de conexión"))
         }
     }
+
+    suspend fun getTodasSesiones(buscar: String?, orden: String?): Result<List<SesionEstudio>> {
+        return try {
+            val response = api.getTodasSesiones(buscar, orden)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar las tutorías"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
 }

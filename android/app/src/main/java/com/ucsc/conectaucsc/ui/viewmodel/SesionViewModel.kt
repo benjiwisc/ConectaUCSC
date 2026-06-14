@@ -63,11 +63,27 @@ class SesionViewModel @Inject constructor(
         }
     }
 
-    fun unirse(sesionId: Int, materiaId: Int) {
+    fun cargarTodasSesiones(buscar: String? = null, orden: String? = "recientes") {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getTodasSesiones(buscar, orden).onSuccess {
+                _sesiones.value = it
+            }.onFailure {
+                _mensaje.value = it.message
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun unirse(sesionId: Int, materiaId: Int, onGeneral: Boolean = false, buscar: String? = null, orden: String? = null) {
         viewModelScope.launch {
             repository.unirse(sesionId).onSuccess {
                 _mensaje.value = it
-                cargarSesionesPorMateria(materiaId)
+                if (onGeneral) {
+                    cargarTodasSesiones(buscar, orden)
+                } else {
+                    cargarSesionesPorMateria(materiaId)
+                }
             }.onFailure {
                 _mensaje.value = it.message
             }
@@ -84,22 +100,30 @@ class SesionViewModel @Inject constructor(
         }
     }
 
-    fun salirse(sesionId: Int, materiaId: Int) {
+    fun salirse(sesionId: Int, materiaId: Int, onGeneral: Boolean = false, buscar: String? = null, orden: String? = null) {
         viewModelScope.launch {
             repository.salirse(sesionId).onSuccess {
                 _mensaje.value = it
-                cargarSesionesPorMateria(materiaId)
+                if (onGeneral) {
+                    cargarTodasSesiones(buscar, orden)
+                } else {
+                    cargarSesionesPorMateria(materiaId)
+                }
             }.onFailure {
                 _mensaje.value = it.message
             }
         }
     }
 
-    fun finalizar(sesionId: Int, materiaId: Int) {
+    fun finalizar(sesionId: Int, materiaId: Int, onGeneral: Boolean = false, buscar: String? = null, orden: String? = null) {
         viewModelScope.launch {
             repository.finalizar(sesionId).onSuccess {
                 _mensaje.value = it
-                cargarSesionesPorMateria(materiaId)
+                if (onGeneral) {
+                    cargarTodasSesiones(buscar, orden)
+                } else {
+                    cargarSesionesPorMateria(materiaId)
+                }
             }.onFailure {
                 _mensaje.value = it.message
             }

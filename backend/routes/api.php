@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/materias/{id}/sesiones', [SesionEstudioController::class, 'porMateria']);
     Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
+    Route::get('/sesiones', [SesionEstudioController::class, 'filtrar']);
     Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
     Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
     

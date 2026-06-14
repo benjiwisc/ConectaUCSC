@@ -142,4 +142,39 @@ class SesionEstudioController extends Controller
 
         return response()->json(['message' => 'Sesión finalizada y eliminada correctamente']);
     }
+
+    // Listar y filtrar todas las sesiones de las materias del usuario
+    public function filtrar(Request $request)
+    {
+        $user = $request->user();
+        $materiaIds = $user->materias()->pluck('materias.id')->toArray();
+
+        $query = SesionEstudio::with(['creador:id,name', 'participantes:id,name', 'materia:id,nombre'])
+            ->whereIn('materia_id', $materiaIds);
+
+        // Buscar por título, ayudante (creador) o nombre del ramo (materia)
+        if ($request->has('buscar') && !empty($request->buscar)) {
+            $buscar = $request->buscar;
+            $query->where(function($q) use ($buscar) {
+                $q->where('titulo', 'like', "%{$buscar}%")
+                  ->orWhereHas('creador', function($q) use ($buscar) {
+                      $q->where('name', 'like', "%{$buscar}%");
+                  })
+                  ->orWhereHas('materia', function($q) use ($buscar) {
+                      $q->where('nombre', 'like', "%{$buscar}%");
+                  });
+            });
+        }
+
+        // Ordenar por fecha_hora
+        $orden = $request->query('orden', 'recientes');
+        if ($orden === 'antiguos') {
+            $query->orderBy('fecha_hora', 'asc');
+        } else {
+            $query->orderBy('fecha_hora', 'desc');
+        }
+
+        $sesiones = $query->get();
+        return response()->json($sesiones);
+    }
 }

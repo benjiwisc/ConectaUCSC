@@ -3,11 +3,7 @@ package com.ucsc.conectaucsc.data.remote
 import com.ucsc.conectaucsc.data.model.CrearSesionRequest
 import com.ucsc.conectaucsc.data.model.SesionEstudio
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.DELETE
+import retrofit2.http.*
 
 interface SesionApiService {
     @GET("materias/{id}/sesiones")
@@ -27,4 +23,10 @@ interface SesionApiService {
 
     @DELETE("sesiones/{id}/finalizar")
     suspend fun finalizar(@Path("id") sesionId: Int): Response<Map<String, String>>
+
+    @GET("sesiones")
+    suspend fun getTodasSesiones(
+        @Query("buscar") buscar: String?,
+        @Query("orden") orden: String?
+    ): Response<List<SesionEstudio>>
 }

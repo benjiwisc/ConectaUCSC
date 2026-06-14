@@ -123,6 +123,15 @@ fun SesionCard(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            sesion.materia?.let {
+                Text(
+                    text = it.nombre.uppercase(),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
             Text(
                 text = sesion.titulo,
                 fontWeight = FontWeight.Bold,

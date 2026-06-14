@@ -29,6 +29,7 @@ import com.ucsc.conectaucsc.ui.viewmodel.LogrosViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.NotasViewModel
 import com.ucsc.conectaucsc.ui.screens.SesionesScreen
 import com.ucsc.conectaucsc.ui.screens.CrearSesionScreen
+import com.ucsc.conectaucsc.ui.screens.TodasSesionesScreen
 import androidx.navigation.toRoute
 
 @Serializable object Login
@@ -50,6 +51,7 @@ data class RegistroMateria(val registroId: Int, val materiaId:Int,val materiaNom
 
 @Serializable data class Sesiones(val materiaId: Int, val materiaNombre: String)
 @Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
+@Serializable object TodasSesiones
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -163,6 +165,13 @@ fun Navigation() {
                     materiaId = route.materiaId,
                     materiaNombre = route.materiaNombre,
                     navController = navController
+                )
+            }
+
+            composable<TodasSesiones> {
+                TodasSesionesScreen(
+                    navController = navController,
+                    authViewModel = viewModel
                 )
             }
 

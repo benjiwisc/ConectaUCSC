@@ -9,12 +9,18 @@ data class SesionEstudio(
     val materia_id: Int,
     val user_id: Int,
     val creador: UsuarioSimple?,
-    val participantes: List<UsuarioSimple>?
+    val participantes: List<UsuarioSimple>?,
+    val materia: MateriaSimple? = null
 )
 
 data class UsuarioSimple(
     val id: Int,
     val name: String
+)
+
+data class MateriaSimple(
+    val id: Int,
+    val nombre: String
 )
 
 data class CrearSesionRequest(

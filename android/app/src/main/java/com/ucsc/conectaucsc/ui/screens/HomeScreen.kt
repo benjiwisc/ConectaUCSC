@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.navigation.Login
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.navigation.Materias
+import com.ucsc.conectaucsc.ui.navigation.TodasSesiones
 
 @Composable
 fun HomeScreen(viewModel: AuthViewModel, navController: NavController) {
@@ -43,7 +44,7 @@ fun HomeScreen(viewModel: AuthViewModel, navController: NavController) {
         }
 
         Button(
-            onClick = { navController.navigate(Materias) },
+            onClick = { navController.navigate(TodasSesiones) },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Text("Sesiones de Estudio")
