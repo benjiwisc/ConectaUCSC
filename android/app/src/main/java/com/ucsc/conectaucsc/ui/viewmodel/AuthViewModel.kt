@@ -77,6 +77,8 @@ class AuthViewModel @Inject constructor(
     fun getUserName(): String = sessionManager.getUserName() ?: "Usuario"
     fun getCarreraId(): Int? = sessionManager.getCarreraId()
 
+    fun getUserId(): Int = sessionManager.getUserId()
+
     fun logout() {
         sessionManager.clearSession()
         _authResult.value = null

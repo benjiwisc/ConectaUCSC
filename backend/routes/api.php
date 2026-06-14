@@ -28,6 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/mis-materias',[MateriaController::class, 'agregar']);
     Route::delete('/mis-materias/{materiaId}',[MateriaController::class, 'eliminar']);
 
+    Route::get('/materias/{id}/sesiones', [SesionEstudioController::class, 'porMateria']);
+    Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
+    Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
+    Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
+
     Route::prefix('horarios')->group(function () {
         Route::get('/{recordId}',[ScheduleController::class, 'index']);
         Route::post('/',[ScheduleController::class, 'store']);
@@ -63,10 +68,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{recordId}',[AttainmentController::class, 'index']);
     });
 
-
-
-    Route::get('/materias/{id}/sesiones', [SesionEstudioController::class, 'porMateria']);
-    Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
-    Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
-    Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
 });

@@ -19,6 +19,8 @@ import com.ucsc.conectaucsc.data.remote.NotasApiService
 import com.ucsc.conectaucsc.data.remote.RegistroApiService
 import com.ucsc.conectaucsc.utils.SessionManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.ucsc.conectaucsc.data.remote.SesionApiService
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -98,5 +100,11 @@ object NetworkModule {
     @Singleton
     fun provideRegistroApiService(retrofit: Retrofit): RegistroApiService {
         return retrofit.create(RegistroApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSesionApiService(retrofit: Retrofit): SesionApiService {
+        return retrofit.create(SesionApiService::class.java)
     }
 }

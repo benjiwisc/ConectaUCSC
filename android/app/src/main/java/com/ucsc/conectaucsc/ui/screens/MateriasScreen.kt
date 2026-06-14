@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.MateriaViewModel
+import com.ucsc.conectaucsc.ui.navigation.Sesiones
 
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 
@@ -100,7 +101,10 @@ fun MateriasScreen(
             ) {
                 items(misMaterias) { materia ->
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        onClick = {
+                            navController.navigate(Sesiones(materia.id, materia.nombre))
+                        }
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(16.dp),

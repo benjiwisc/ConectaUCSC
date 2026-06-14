@@ -11,12 +11,18 @@ import com.ucsc.conectaucsc.ui.screens.RegisterScreen
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import kotlinx.serialization.Serializable
 import com.ucsc.conectaucsc.ui.screens.MateriasScreen
+import com.ucsc.conectaucsc.ui.screens.SesionesScreen
+import com.ucsc.conectaucsc.ui.screens.CrearSesionScreen
+import androidx.navigation.toRoute
 
 @Serializable object Login
 @Serializable object Register
 @Serializable object Home
 
 @Serializable object Materias
+
+@Serializable data class Sesiones(val materiaId: Int, val materiaNombre: String)
+@Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -36,6 +42,23 @@ fun Navigation() {
         }
         composable<Materias> {
             MateriasScreen(navController = navController, authViewModel = viewModel)
+        }
+        composable<Sesiones> { backStackEntry ->
+            val route: Sesiones = backStackEntry.toRoute()
+            SesionesScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController,
+                authViewModel = viewModel
+            )
+        }
+        composable<CrearSesion> { backStackEntry ->
+            val route: CrearSesion = backStackEntry.toRoute()
+            CrearSesionScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController
+            )
         }
     }
 }

@@ -19,6 +19,8 @@ import com.ucsc.conectaucsc.data.repository.LogrosRepository
 import com.ucsc.conectaucsc.data.repository.MateriaRepository
 import com.ucsc.conectaucsc.data.repository.NotasRepository
 import com.ucsc.conectaucsc.data.repository.RegistroRepository
+import com.ucsc.conectaucsc.data.remote.SesionApiService
+import com.ucsc.conectaucsc.data.repository.SesionRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -64,5 +66,11 @@ object RepositoryModule {
     @Singleton
     fun provideRecordRepository(api: RegistroApiService): RegistroRepository {
         return RegistroRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSesionRepository(api: SesionApiService): SesionRepository {
+        return SesionRepository(api)
     }
 }
