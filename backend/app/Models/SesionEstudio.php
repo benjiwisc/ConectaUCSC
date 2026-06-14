@@ -13,6 +13,7 @@ class SesionEstudio extends Model
         'descripcion',
         'materia_id',
         'user_id',
+        'google_event_id',
     ];
 
     public function materia()

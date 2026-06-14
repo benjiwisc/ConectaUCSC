@@ -59,6 +59,13 @@ class SesionEstudioController extends Controller
         // El creador se une automáticamente
         $sesion->participantes()->attach($user->id);
 
+        // Crear evento en Google Calendar
+        $sesion->load(['creador:id,name,email', 'participantes:id,name,email']);
+        $eventId = \App\Services\GoogleCalendarService::createEvent($sesion);
+        if ($eventId) {
+            $sesion->update(['google_event_id' => $eventId]);
+        }
+
         return response()->json($sesion->load(['creador:id,name', 'participantes:id,name']), 201);
     }
 
@@ -73,6 +80,10 @@ class SesionEstudioController extends Controller
         }
 
         $sesion->participantes()->attach($user->id);
+
+        // Sincronizar participantes en Google Calendar
+        $sesion->load(['participantes:id,name,email']);
+        \App\Services\GoogleCalendarService::syncEvent($sesion);
 
         return response()->json(['message' => 'Te has unido a la sesión correctamente']);
     }
@@ -101,6 +112,11 @@ class SesionEstudioController extends Controller
         }
 
         $sesion->participantes()->detach($user->id);
+
+        // Sincronizar participantes en Google Calendar
+        $sesion->load(['participantes:id,name,email']);
+        \App\Services\GoogleCalendarService::syncEvent($sesion);
+
         return response()->json(['message' => 'Has abandonado la sesión']);
     }
 
@@ -116,7 +132,14 @@ class SesionEstudioController extends Controller
             ], 403);
         }
 
+        $googleEventId = $sesion->google_event_id;
         $sesion->delete();
+
+        // Eliminar evento en Google Calendar si existe
+        if ($googleEventId) {
+            \App\Services\GoogleCalendarService::deleteEvent($googleEventId);
+        }
+
         return response()->json(['message' => 'Sesión finalizada y eliminada correctamente']);
     }
 }
