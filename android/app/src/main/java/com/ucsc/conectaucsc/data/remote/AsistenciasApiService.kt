@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.data.remote
 
 
+import com.ucsc.conectaucsc.data.model.Asistencia
 import com.ucsc.conectaucsc.data.model.Attendance
 import retrofit2.Response
 import retrofit2.http.Body
@@ -12,7 +13,7 @@ import retrofit2.http.Path
 
 interface AsistenciasApiService {
     @POST("asistencias/registrar")
-    suspend fun registrarAsistencia(@Body body: Map<String, Any>): Response<List<Attendance>>
+    suspend fun registrarAsistencia(@Body body: Asistencia): Response<List<Attendance>>
 
     @GET("asistencias/{recordId}")
     suspend fun getAsistencias(@Path("recordId") recordId: Int): Response<List<Attendance>>
@@ -21,7 +22,7 @@ interface AsistenciasApiService {
     suspend fun createAsistencia(@Body body: Map<String, Any>): Response<Attendance>
 
     @PUT("asistencias/{id}")
-    suspend fun updateAsistencia(@Path("id") id: Int, @Body body: Map<String, Any>): Response<Attendance>
+    suspend fun updateAsistencia(@Path("id") id: Int): Response<Attendance>
 
     @PUT("asistencias/{id}/justificar")
     suspend fun justificarAsistencia(@Path("id") id: Int): Response<Attendance>

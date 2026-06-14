@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class UsuarioMateria extends Model
 {
-    protected $fillable = ['user_id', 'materia_id'];
+    protected $fillable = ['id','user_id', 'materia_id'];
 }

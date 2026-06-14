@@ -12,11 +12,15 @@ class ScheduleController extends Controller
         return Schedule::where('record_id', $recordId)->get();
     }
 
+    public function edit($Id) {
+        return Schedule::where('id', $Id)->first();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'record_id'   => 'required|exists:records,usuario_materia_id',
-            'dia'         => 'required|in:lunes,martes,miercoles,jueves,viernes,sabado',
+            'record_id'   => 'required',
+            'dia'         => 'required|in:lunes,martes,miércoles,jueves,viernes,sábado',
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin'    => 'required|date_format:H:i|after:hora_inicio',
             'sala'        => 'nullable|string',
@@ -34,7 +38,7 @@ class ScheduleController extends Controller
                 });
             })
             ->exists();
-
+    
         if ($cruce) {
             return response()->json(['message' => 'Ya tienes una clase en ese horario para este ramo'], 409);
         }
@@ -55,7 +59,7 @@ class ScheduleController extends Controller
             'tipo_clase'  => 'sometimes|in:laboratorio,ayudantia,catedra'
         ]);
 
-        // verificar cruce excluyendo el horario actual
+       
         $cruce = Schedule::where('record_id', $schedule->record_id)
             ->where('dia', $request->dia ?? $schedule->dia)
             ->where('id', '!=', $id)
@@ -81,6 +85,9 @@ class ScheduleController extends Controller
 
     public function destroy($id) {
         Schedule::findOrFail($id)->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Horario eliminado'
+        ]);
     }
 }

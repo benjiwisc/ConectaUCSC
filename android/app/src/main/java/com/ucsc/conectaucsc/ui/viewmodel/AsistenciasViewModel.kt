@@ -2,12 +2,14 @@ package com.ucsc.conectaucsc.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ucsc.conectaucsc.data.model.Asistencia
 import com.ucsc.conectaucsc.data.model.Attendance
 import com.ucsc.conectaucsc.data.repository.AsistenciasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,18 +37,22 @@ class AsistenciasViewModel @Inject constructor(
         }
     }
 
-    fun registrarAsistencia(latitud: Double, longitud: Double, fecha: String) {
+    fun registrarAsistencia(latitud: Double, longitud: Double) {
         viewModelScope.launch {
             _isLoading.value = true
-            repository.registrarAsistencia(mapOf(
-                "latitud" to latitud,
-                "longitud" to longitud,
-                "fecha" to fecha
-            )).onSuccess {
-                _mensaje.value = "Asistencia registrada correctamente"
-            }.onFailure {
-                _mensaje.value = it.message
-            }
+            val body = Asistencia(
+                latitud = latitud,
+                longitud = longitud,
+                fecha = LocalDate.now().toString()
+            )
+            repository.registrarAsistencia(body)
+                .onSuccess {
+                    _asistencias.value = it
+                    _mensaje.value = "Asistencia registrada correctamente"
+                }
+                .onFailure {
+                    _mensaje.value = it.message
+                }
             _isLoading.value = false
         }
     }
@@ -66,6 +72,17 @@ class AsistenciasViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAsistencia(id).onSuccess {
                 _mensaje.value = "Asistencia eliminada correctamente"
+                cargarAsistencias(recordId)
+            }.onFailure {
+                _mensaje.value = it.message
+            }
+        }
+    }
+
+    fun updateAsistencia(id: Int, recordId: Int) {
+        viewModelScope.launch {
+            repository.updateAsistencia(id).onSuccess {
+                _mensaje.value = "Asistencia actualizada correctamente"
                 cargarAsistencias(recordId)
             }.onFailure {
                 _mensaje.value = it.message

@@ -22,6 +22,17 @@ class MateriaController extends Controller
     public function misMateria(Request $request)
     {
         $materias = $request->user()->materias()->get();
+        $materias = $materias->map(function ($materia) {
+        return [
+            'id'         => $materia->id,  
+            'nombre'     => $materia->nombre,
+            'carrera_id' => $materia->carrera_id,
+            'id_registro'=> $materia->pivot->id
+        ];
+      
+    });
+
+    return response()->json($materias);
         return response()->json($materias);
     }
 

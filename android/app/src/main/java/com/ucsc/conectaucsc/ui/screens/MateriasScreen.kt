@@ -21,6 +21,7 @@ import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.MateriaViewModel
 
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import com.ucsc.conectaucsc.ui.navigation.RegistroMateria
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,7 +101,8 @@ fun MateriasScreen(
             ) {
                 items(misMaterias) { materia ->
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        onClick = { navController.navigate(RegistroMateria(materia.id_registro)) }
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(16.dp),

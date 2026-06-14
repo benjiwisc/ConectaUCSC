@@ -14,11 +14,14 @@ interface HorariosApiService {
     @GET("horarios/{recordId}")
     suspend fun getHorarios(@Path("recordId") recordId: Int): Response<List<Schedule>>
 
+    @GET("horarios/editar/{recordId}")
+    suspend fun editHorarios(@Path("recordId") horarioId: Int): Response<Schedule>
+
     @POST("horarios")
-    suspend fun createHorario(@Body body: Map<String, Any>): Response<Schedule>
+    suspend fun createHorario(@Body body: Schedule): Response<Schedule>
 
     @PUT("horarios/{id}")
-    suspend fun updateHorario(@Path("id") id: Int, @Body body: Map<String, Any>): Response<Schedule>
+    suspend fun updateHorario(@Path("id") id: Int, @Body body: Schedule): Response<Schedule>
 
     @DELETE("horarios/{id}")
     suspend fun deleteHorario(@Path("id") id: Int): Response<Map<String, String>>

@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('horarios')->group(function () {
         Route::get('/{recordId}',[ScheduleController::class, 'index']);
+        Route::get('editar/{recordId}',[ScheduleController::class, 'edit']);
         Route::post('/',[ScheduleController::class, 'store']);
         Route::put('/{id}',[ScheduleController::class, 'update']);
         Route::delete('/{id}',[ScheduleController::class, 'destroy']);
@@ -42,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('notas')->group(function () {
         Route::get('/{recordId}',[GradeController::class, 'index']);
+        Route::get('editar/{recordId}',[GradeController::class, 'edit']);
         Route::post('/',[GradeController::class, 'store']);
         Route::put('/{id}',[GradeController::class, 'update']);
         Route::delete('/{id}',[GradeController::class, 'destroy']);

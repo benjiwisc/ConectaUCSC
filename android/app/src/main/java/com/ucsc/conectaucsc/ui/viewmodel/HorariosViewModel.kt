@@ -7,6 +7,7 @@ import com.ucsc.conectaucsc.data.repository.HorariosRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +24,8 @@ class HorariosViewModel @Inject constructor(
 
     private val _mensaje = MutableStateFlow<String?>(null)
     val mensaje: StateFlow<String?> = _mensaje
+    private val _horarioDetalle = MutableStateFlow<Schedule?>(null)
+    val horarioDetalle: StateFlow<Schedule?> = _horarioDetalle.asStateFlow()
 
     fun cargarHorarios(recordId: Int) {
         viewModelScope.launch {
@@ -36,7 +39,19 @@ class HorariosViewModel @Inject constructor(
         }
     }
 
-    fun createHorario(body: Map<String, Any>) {
+    fun editHorarios(recordId: Int,horarioId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.editHorarios(horarioId).onSuccess { horarioRecibido ->
+                _horarioDetalle.value = horarioRecibido
+            }.onFailure {
+                _mensaje.value = it.message ?: "Error al cargar el horario"
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun createHorario(body: Schedule) {
         viewModelScope.launch {
             _isLoading.value = true
             repository.createHorario(body).onSuccess {
@@ -48,7 +63,7 @@ class HorariosViewModel @Inject constructor(
         }
     }
 
-    fun updateHorario(id: Int, body: Map<String, Any>) {
+    fun updateHorario(id: Int, body: Schedule) {
         viewModelScope.launch {
             _isLoading.value = true
             repository.updateHorario(id, body).onSuccess {

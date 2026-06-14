@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('record_id')->constrained('records')->onDelete('cascade');
-            $table->enum('dia', ['lunes','martes','miercoles','jueves','viernes','sabado']);
+            $table->enum('dia', ['lunes','martes','miércoles','jueves','viernes','sábado']);
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->enum('tipo_clase', ['laboratorio','catedra','ayudantia']);

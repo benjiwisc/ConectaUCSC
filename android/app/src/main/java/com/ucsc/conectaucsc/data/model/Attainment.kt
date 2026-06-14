@@ -6,5 +6,5 @@ data class Attainment (
     val tipo: String,
     val meta: Int,
     val progreso: Int,
-    val cumplido: Boolean
+    val cumplido: Int
 )

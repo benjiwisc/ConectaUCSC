@@ -1,11 +1,12 @@
 package com.ucsc.conectaucsc.data.repository
 
+import com.ucsc.conectaucsc.data.model.Asistencia
 import com.ucsc.conectaucsc.data.model.Attendance
 import com.ucsc.conectaucsc.data.remote.AsistenciasApiService
 import javax.inject.Inject
 
 class AsistenciasRepository @Inject constructor(private val api: AsistenciasApiService) {
-    suspend fun registrarAsistencia(body: Map<String, Any>): Result<List<Attendance>> {
+    suspend fun registrarAsistencia(body: Asistencia): Result<List<Attendance>> {
         return try {
             val response = api.registrarAsistencia(body)
             if (response.isSuccessful) Result.success(response.body()!!)
@@ -35,9 +36,9 @@ class AsistenciasRepository @Inject constructor(private val api: AsistenciasApiS
         }
     }
 
-    suspend fun updateAsistencia(id: Int, body: Map<String, Any>): Result<Attendance> {
+    suspend fun updateAsistencia(id: Int): Result<Attendance> {
         return try {
-            val response = api.updateAsistencia(id, body)
+            val response = api.updateAsistencia(id)
             if (response.isSuccessful) Result.success(response.body()!!)
             else Result.failure(Exception("Error al actualizar asistencia"))
         } catch (e: Exception) {

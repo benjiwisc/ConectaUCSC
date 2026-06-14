@@ -26,6 +26,6 @@ class User extends Authenticatable
     
     public function materias()
     {
-        return $this->belongsToMany(Materia::class, 'usuario_materias');
+        return $this->belongsToMany(Materia::class, 'usuario_materias')->withPivot('id');
     }
 }

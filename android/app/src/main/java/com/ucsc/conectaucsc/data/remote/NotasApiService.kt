@@ -13,16 +13,19 @@ interface NotasApiService {
     @GET("notas/{recordId}")
     suspend fun getNotas(@Path("recordId") recordId: Int): Response<List<Grade>>
 
+    @GET("notas/editar/{recordId}")
+    suspend fun editNotas(@Path("recordId") recordId: Int): Response<Grade>
+
     @POST("notas")
-    suspend fun createNota(@Body body: Map<String, Any>): Response<Grade>
+    suspend fun createNota(@Body body: Grade): Response<Grade>
 
     @PUT("notas/{id}")
-    suspend fun updateNota(@Path("id") id: Int, @Body body: Map<String, Any>): Response<Grade>
+    suspend fun updateNota(@Path("id") id: Int, @Body body: Grade): Response<Grade>
 
     @DELETE("notas/{id}")
     suspend fun deleteNota(@Path("id") id: Int): Response<Map<String, String>>
 
     @GET("notas/{recordId}/promedio")
-    suspend fun getPromedio(@Path("recordId") recordId: Int): Response<Map<String, Double>>
+    suspend fun getPromedio(@Path("recordId") recordId: Int): Response<Grade>
 
 }

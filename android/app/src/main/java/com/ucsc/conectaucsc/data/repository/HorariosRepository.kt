@@ -15,7 +15,17 @@ class HorariosRepository @Inject constructor(private val api: HorariosApiService
         }
     }
 
-    suspend fun createHorario(body: Map<String, Any>): Result<Schedule> {
+    suspend fun editHorarios(horarioId: Int): Result<Schedule> {
+        return try {
+            val response = api.editHorarios(horarioId)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar horarios"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun createHorario(body: Schedule): Result<Schedule> {
         return try {
             val response = api.createHorario(body)
             if (response.isSuccessful) Result.success(response.body()!!)
@@ -25,7 +35,7 @@ class HorariosRepository @Inject constructor(private val api: HorariosApiService
         }
     }
 
-    suspend fun updateHorario(id: Int, body: Map<String, Any>): Result<Schedule> {
+    suspend fun updateHorario(id: Int, body: Schedule): Result<Schedule> {
         return try {
             val response = api.updateHorario(id, body)
             if (response.isSuccessful) Result.success(response.body()!!)

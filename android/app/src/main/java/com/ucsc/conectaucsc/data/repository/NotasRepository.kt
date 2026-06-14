@@ -15,7 +15,17 @@ class NotasRepository  @Inject constructor(private val api: NotasApiService){
         }
     }
 
-    suspend fun createNota(body: Map<String, Any>): Result<Grade> {
+    suspend fun editNotas(recordId: Int): Result<Grade> {
+        return try {
+            val response = api.editNotas(recordId)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar nota"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun createNota(body: Grade): Result<Grade> {
         return try {
             val response = api.createNota(body)
             if (response.isSuccessful) Result.success(response.body()!!)
@@ -25,7 +35,7 @@ class NotasRepository  @Inject constructor(private val api: NotasApiService){
         }
     }
 
-    suspend fun updateNota(id: Int, body: Map<String, Any>): Result<Grade> {
+    suspend fun updateNota(id: Int, body: Grade): Result<Grade> {
         return try {
             val response = api.updateNota(id, body)
             if (response.isSuccessful) Result.success(response.body()!!)

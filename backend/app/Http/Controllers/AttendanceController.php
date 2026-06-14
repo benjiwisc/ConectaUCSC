@@ -33,17 +33,20 @@ class AttendanceController extends Controller
         return response()->json($attendance, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
         $attendance = Attendance::findOrFail($id);
 
-        $request->validate([
-            'estado' => 'required|in:presente,ausente,justificado',
-        ]);
+        if($attendance->estado == 'presente'){
+            $attendance->update([
+                'estado' => 'ausente',
+            ]);
 
-        $attendance->update([
-            'estado' => $request->estado,
-        ]);
+        }else{
+            $attendance->update([
+                'estado' => 'presente',
+            ]);
+        }
 
         return response()->json($attendance);
     }
@@ -56,25 +59,26 @@ class AttendanceController extends Controller
         return response()->json($attendance);
     }
 
+
     public function destroy($id)
     {
         Attendance::findOrFail($id)->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Asistencia eliminada'
+        ]);
     }
 
-    public function registrarPorUbicacion(Request $request)
+   public function registrarPorUbicacion(Request $request)
     {
         $request->validate([
             'latitud'  => 'required|numeric',
             'longitud' => 'required|numeric',
-            'fecha'    => 'required|date',
         ]);
 
-        if (!$this->verificarUbicacion($request->latitud, $request->longitud)) {
-            return response()->json(['message' => 'Estás fuera del campus'], 409);
-        }
-
+        $fechaHoy = now()->toDateString(); 
         $diaHoy = strtolower(now()->locale('es')->dayName);
+        $horaActual = now()->format('H:i');
         $usuario = $request->user();
 
         $records = Record::whereHas('usuarioMateria', function ($q) use ($usuario) {
@@ -89,29 +93,49 @@ class AttendanceController extends Controller
             return response()->json(['message' => 'No tienes clases hoy'], 409);
         }
 
+        $enCampus = $this->verificarUbicacion($request->latitud, $request->longitud);
         $registradas = [];
 
         foreach ($records as $record) {
 
-            $yaRegistrada = Attendance::where('record_id', $record->id)
-                ->whereDate('fecha', $request->fecha)
-                ->exists();
+            $bloques = $record->schedules()->where('dia', $diaHoy)->get();
+            
+            foreach ($bloques as $bloque) {
 
-            if (!$yaRegistrada) {
+                $asistencia = Attendance::where('record_id', $record->id)
+                    ->where('schedule_id', $bloque->id)
+                    ->whereDate('fecha', $fechaHoy)
+                    ->first();
+                        
 
-                $attendance = Attendance::create([
-                    'record_id' => $record->id,
-                    'fecha'     => $request->fecha,
-                    'estado'    => 'presente',
-                ]);
+                if (!$asistencia) {
+                    $asistencia = Attendance::create([
+                        'record_id'   => $record->id,
+                        'schedule_id' => $bloque->id,
+                        'fecha'       => $fechaHoy,
+                        'estado'      => 'ausente',
+                    ]);
+                    
+                }
 
-                $registradas[] = $attendance;
-                $this->verificarLogros($record);
+                $enHorario = $horaActual >= date('H:i', strtotime('-30 minutes', strtotime($bloque->hora_inicio)))
+                        && $horaActual <= $bloque->hora_fin;
+
+                if ($enCampus && $enHorario && $asistencia->estado !== 'presente') {
+                    $asistencia->update(['estado' => 'presente']);
+                    $this->verificarLogros($record);
+                }
+
+                $registradas[] = $asistencia->fresh();
             }
         }
 
+        $todosPresentes = collect($registradas)->every(fn($a) => $a->estado === 'presente');
+
         return response()->json([
-            'message'     => 'Asistencia registrada en todos tus ramos de hoy',
+            'message'     => $todosPresentes
+                ? 'Ya tienes asistencia registrada como presente'
+                : ($enCampus ? 'Asistencia registrada como presente' : 'No estás en el campus'),
             'registradas' => $registradas
         ], 201);
     }

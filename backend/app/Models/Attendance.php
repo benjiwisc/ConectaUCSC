@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
-    protected $fillable = ['record_id', 'fecha', 'estado'];
+    protected $fillable = ['schedule_id','record_id', 'fecha', 'estado'];
 
     public function record() {
         return $this->belongsTo(Record::class);

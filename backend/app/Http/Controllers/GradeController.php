@@ -12,12 +12,16 @@ class GradeController extends Controller
         return Grade::where('record_id', $recordId)->get();
     }
 
+    public function edit($Id) {
+        return Grade::where('id', $Id)->first();
+    }
+
     public function store(Request $request) {
         $request->validate([
             'record_id'  => 'required|exists:records,usuario_materia_id',
             'evaluacion' => 'required|string',
             'porcentaje' => 'required|integer',
-            'nota'       => 'required|numeric|min:1|max:7',
+            'nota'       => 'required|numeric|max:7',
         ]);
         $grade = Grade::create($request->all());
         return response()->json($grade, 201);
@@ -28,7 +32,7 @@ class GradeController extends Controller
         $request->validate([
             'evaluacion' => 'sometimes|string',
             'porcentaje' => 'sometimes|integer',
-            'nota'       => 'sometimes|numeric|min:1|max:7',
+            'nota'       => 'sometimes|numeric|max:7',
         ]);
         $grade->update($request->only('evaluacion', 'nota', 'porcentaje'));
         return response()->json($grade);
