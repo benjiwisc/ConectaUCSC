@@ -12,6 +12,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.ucsc.conectaucsc.data.remote.MateriaApiService
 import android.content.Context
+import com.ucsc.conectaucsc.data.remote.AsistenciasApiService
+import com.ucsc.conectaucsc.data.remote.HorariosApiService
+import com.ucsc.conectaucsc.data.remote.LogrosApiService
+import com.ucsc.conectaucsc.data.remote.NotasApiService
+import com.ucsc.conectaucsc.data.remote.RegistroApiService
 import com.ucsc.conectaucsc.utils.SessionManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 @Module
@@ -63,5 +68,35 @@ object NetworkModule {
     @Singleton
     fun provideMateriaApiService(retrofit: Retrofit): MateriaApiService {
         return retrofit.create(MateriaApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAsistenciasApiService(retrofit: Retrofit): AsistenciasApiService {
+        return retrofit.create(AsistenciasApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHorariosApiService(retrofit: Retrofit): HorariosApiService {
+        return retrofit.create(HorariosApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogrosApiService(retrofit: Retrofit): LogrosApiService {
+        return retrofit.create(LogrosApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotasApiService(retrofit: Retrofit): NotasApiService {
+        return retrofit.create(NotasApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegistroApiService(retrofit: Retrofit): RegistroApiService {
+        return retrofit.create(RegistroApiService::class.java)
     }
 }
