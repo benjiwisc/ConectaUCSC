@@ -1,4 +1,5 @@
 package com.ucsc.conectaucsc.ui.screens
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -23,7 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ucsc.conectaucsc.ui.navigation.ArchivosEstudio
 import com.ucsc.conectaucsc.ui.navigation.Asistencia
+import com.ucsc.conectaucsc.ui.navigation.EvaluacionesPracticas
 import com.ucsc.conectaucsc.ui.navigation.Horario
 import com.ucsc.conectaucsc.ui.navigation.Logros
 import com.ucsc.conectaucsc.ui.navigation.Notas
@@ -34,8 +39,8 @@ import com.ucsc.conectaucsc.ui.navigation.Sesiones
 fun RegistroMateriaScreen(
     navController: NavController,
     registroId: Int,
-    materiaId:Int,
-    nombreMateria:String
+    materiaId: Int,
+    nombreMateria: String
 ) {
     Scaffold(
         topBar = {
@@ -72,8 +77,9 @@ fun RegistroMateriaScreen(
                 "Logros" to Icons.Default.Star,
                 "Notas" to Icons.Default.Edit,
                 "Horario" to Icons.Default.Schedule,
-                "Sesiones" to Icons.Default.Schedule
-
+                "Sesiones" to Icons.Default.Schedule,
+                "Evaluaciones Prácticas" to Icons.Default.Assignment,
+                "Archivos de Estudio" to Icons.Default.Folder
             )
 
             botones.forEach { (titulo, icono) ->
@@ -85,6 +91,8 @@ fun RegistroMateriaScreen(
                             "Notas" -> navController.navigate(Notas(registroId))
                             "Logros" -> navController.navigate(Logros(registroId))
                             "Sesiones" -> navController.navigate(Sesiones(materiaId, nombreMateria))
+                            "Evaluaciones Prácticas" -> navController.navigate(EvaluacionesPracticas(materiaId))
+                            "Archivos de Estudio" -> navController.navigate(ArchivosEstudio(materiaId))
                         }
                     },
                     modifier = Modifier

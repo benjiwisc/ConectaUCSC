@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SesionEstudio extends Model
+class PracticalEvaluation extends Model
 {
+    protected $table = 'practical_evaluation';
+
     protected $fillable = [
-        'titulo',
-        'lugar',
-        'fecha_hora',
-        'descripcion',
         'materia_id',
         'user_id',
-        'google_event_id',
+        'titulo',
+        'descripcion',
+        'pdf_path',
     ];
 
     public function materia()
@@ -26,13 +26,8 @@ class SesionEstudio extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function participantes()
+    public function completions()
     {
-        return $this->belongsToMany(User::class, 'sesion_participantes');
-    }
-
-    public function mensajes()
-    {
-        return $this->hasMany(SesionMensaje::class);
+        return $this->hasMany(PracticalEvaluationCompletion::class);
     }
 }

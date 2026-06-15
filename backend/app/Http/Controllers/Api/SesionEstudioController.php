@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\SesionMensaje;
 use App\Models\SesionEstudio;
 use Illuminate\Http\Request;
 
 class SesionEstudioController extends Controller
 {
+    private function puedeAccederSesion($user, SesionEstudio $sesion): bool
+    {
+        return $sesion->participantes()->where('user_id', $user->id)->exists();
+    }
+
     // Listar sesiones por materia
     public function porMateria(Request $request, $materiaId)
     {
@@ -133,6 +139,7 @@ class SesionEstudioController extends Controller
         }
 
         $googleEventId = $sesion->google_event_id;
+        $sesion->mensajes()->delete();
         $sesion->delete();
 
         // Eliminar evento en Google Calendar si existe
@@ -176,5 +183,50 @@ class SesionEstudioController extends Controller
 
         $sesiones = $query->get();
         return response()->json($sesiones);
+    }
+
+    // Listar mensajes de una sesión
+    public function mensajes(Request $request, $sesionId)
+    {
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if (!$this->puedeAccederSesion($user, $sesion)) {
+            return response()->json([
+                'message' => 'No tienes acceso al chat de esta sesión'
+            ], 403);
+        }
+
+        $mensajes = SesionMensaje::with('user:id,name')
+            ->where('sesion_estudio_id', $sesion->id)
+            ->orderBy('created_at')
+            ->get();
+
+        return response()->json($mensajes);
+    }
+
+    // Enviar mensaje al chat de la sesión
+    public function enviarMensaje(Request $request, $sesionId)
+    {
+        $request->validate([
+            'message' => 'required|string|max:2000',
+        ]);
+
+        $user = $request->user();
+        $sesion = SesionEstudio::findOrFail($sesionId);
+
+        if (!$this->puedeAccederSesion($user, $sesion)) {
+            return response()->json([
+                'message' => 'No tienes acceso al chat de esta sesión'
+            ], 403);
+        }
+
+        $mensaje = SesionMensaje::create([
+            'sesion_estudio_id' => $sesion->id,
+            'user_id' => $user->id,
+            'message' => $request->message,
+        ]);
+
+        return response()->json($mensaje->load('user:id,name'), 201);
     }
 }

@@ -2,6 +2,8 @@ package com.ucsc.conectaucsc.data.remote
 
 import com.ucsc.conectaucsc.data.model.CrearSesionRequest
 import com.ucsc.conectaucsc.data.model.SesionEstudio
+import com.ucsc.conectaucsc.data.model.MensajeChat
+import com.ucsc.conectaucsc.data.model.EnviarMensajeRequest
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -29,4 +31,13 @@ interface SesionApiService {
         @Query("buscar") buscar: String?,
         @Query("orden") orden: String?
     ): Response<List<SesionEstudio>>
+
+    @GET("sesiones/{id}/mensajes")
+    suspend fun getMensajes(@Path("id") sesionId: Int): Response<List<MensajeChat>>
+
+    @POST("sesiones/{id}/mensajes")
+    suspend fun enviarMensaje(
+        @Path("id") sesionId: Int,
+        @Body request: EnviarMensajeRequest
+    ): Response<MensajeChat>
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.data.model.SesionEstudio
+import com.ucsc.conectaucsc.ui.navigation.Chat
 import com.ucsc.conectaucsc.ui.navigation.CrearSesion
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.SesionViewModel
@@ -99,7 +101,10 @@ fun SesionesScreen(
                         materiaId = materiaId,
                         onUnirse = { sesionViewModel.unirse(sesion.id, materiaId) },
                         onSalirse = { sesionViewModel.salirse(sesion.id, materiaId) },
-                        onFinalizar = { sesionViewModel.finalizar(sesion.id, materiaId) }
+                        onFinalizar = { sesionViewModel.finalizar(sesion.id, materiaId) },
+                        onChatClick = {
+                            navController.navigate(Chat(sesion.id, sesion.titulo))
+                        }
                     )
                 }
             }
@@ -114,7 +119,8 @@ fun SesionCard(
     materiaId: Int,
     onUnirse: () -> Unit,
     onSalirse: () -> Unit,
-    onFinalizar: () -> Unit
+    onFinalizar: () -> Unit,
+    onChatClick: () -> Unit
 ) {
     val yaParticipa = sesion.participantes?.any { it.id == userId } == true
     val esCreador = sesion.user_id == userId
@@ -190,6 +196,22 @@ fun SesionCard(
                     ) {
                         Text("Unirse a la sesión")
                     }
+                }
+            }
+
+            // El botón de chat solo se muestra si es el creador o si ya se unió
+            if (yaParticipa || esCreador) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = onChatClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    )
+                ) {
+                    Icon(Icons.Default.Chat, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Chat de Tutoría")
                 }
             }
         }

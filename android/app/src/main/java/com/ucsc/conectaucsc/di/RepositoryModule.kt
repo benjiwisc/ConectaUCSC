@@ -1,26 +1,12 @@
 package com.ucsc.conectaucsc.di
 
-import com.ucsc.conectaucsc.data.remote.AsistenciasApiService
-import com.ucsc.conectaucsc.data.remote.AuthApiService
-import com.ucsc.conectaucsc.data.remote.HorariosApiService
-import com.ucsc.conectaucsc.data.remote.LogrosApiService
-import com.ucsc.conectaucsc.data.repository.AuthRepository
+import com.ucsc.conectaucsc.data.remote.*
+import com.ucsc.conectaucsc.data.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import com.ucsc.conectaucsc.data.remote.MateriaApiService
-import com.ucsc.conectaucsc.data.remote.NotasApiService
-import com.ucsc.conectaucsc.data.remote.RegistroApiService
-import com.ucsc.conectaucsc.data.repository.AsistenciasRepository
-import com.ucsc.conectaucsc.data.repository.HorariosRepository
-import com.ucsc.conectaucsc.data.repository.LogrosRepository
-import com.ucsc.conectaucsc.data.repository.MateriaRepository
-import com.ucsc.conectaucsc.data.repository.NotasRepository
-import com.ucsc.conectaucsc.data.repository.RegistroRepository
-import com.ucsc.conectaucsc.data.remote.SesionApiService
-import com.ucsc.conectaucsc.data.repository.SesionRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -72,5 +58,17 @@ object RepositoryModule {
     @Singleton
     fun provideSesionRepository(api: SesionApiService): SesionRepository {
         return SesionRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEvaluacionesPracticasRepository(api: EvaluacionesPracticasApiService): EvaluacionesPracticasRepository {
+        return EvaluacionesPracticasRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideArchivosEstudioRepository(api: ArchivosEstudioApiService): ArchivosEstudioRepository {
+        return ArchivosEstudioRepository(api)
     }
 }

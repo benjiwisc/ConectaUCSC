@@ -1,6 +1,5 @@
 package com.ucsc.conectaucsc.ui.navigation
 
-import android.R
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,13 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.ucsc.conectaucsc.ui.screens.HomeScreen
-import com.ucsc.conectaucsc.ui.screens.LoginScreen
-import com.ucsc.conectaucsc.ui.screens.RegisterScreen
-import com.ucsc.conectaucsc.ui.screens.RegistroMateriaScreen
-import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
-import kotlinx.serialization.Serializable
-import com.ucsc.conectaucsc.ui.screens.MateriasScreen
+import com.ucsc.conectaucsc.ui.screens.*
 import com.ucsc.conectaucsc.ui.screens.asistencia.AsistenciaScreen
 import com.ucsc.conectaucsc.ui.screens.horario.AddHorarioScreen
 import com.ucsc.conectaucsc.ui.screens.horario.EditHorarioScreen
@@ -23,35 +16,32 @@ import com.ucsc.conectaucsc.ui.screens.logros.LogrosScreen
 import com.ucsc.conectaucsc.ui.screens.notas.AddNotasScreen
 import com.ucsc.conectaucsc.ui.screens.notas.EditNotasScreen
 import com.ucsc.conectaucsc.ui.screens.notas.NotasScreen
-import com.ucsc.conectaucsc.ui.viewmodel.AsistenciasViewModel
-import com.ucsc.conectaucsc.ui.viewmodel.HorariosViewModel
-import com.ucsc.conectaucsc.ui.viewmodel.LogrosViewModel
-import com.ucsc.conectaucsc.ui.viewmodel.NotasViewModel
-import com.ucsc.conectaucsc.ui.screens.SesionesScreen
-import com.ucsc.conectaucsc.ui.screens.CrearSesionScreen
-import com.ucsc.conectaucsc.ui.screens.TodasSesionesScreen
-import androidx.navigation.toRoute
+import com.ucsc.conectaucsc.ui.viewmodel.*
+import kotlinx.serialization.Serializable
 
 @Serializable object Login
 @Serializable object Register
 @Serializable object Home
-
 @Serializable object Materias
+
 @Serializable
-data class RegistroMateria(val registroId: Int, val materiaId:Int,val materiaNombre: String)
+data class RegistroMateria(val registroId: Int, val materiaId: Int, val materiaNombre: String)
+
 @Serializable data class Asistencia(val registroId: Int)
 @Serializable data class Logros(val registroId: Int)
-
 @Serializable data class Horario(val registroId: Int)
 @Serializable data class AddHorario(val registroId: Int)
 @Serializable data class EditHorario(val registroId: Int, val horarioId: Int)
 @Serializable data class Notas(val registroId: Int)
 @Serializable data class AddNotas(val registroId: Int)
 @Serializable data class EditNotas(val registroId: Int, val notaId: Int)
-
 @Serializable data class Sesiones(val materiaId: Int, val materiaNombre: String)
 @Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
 @Serializable object TodasSesiones
+@Serializable data class EvaluacionesPracticas(val materiaId: Int)
+@Serializable data class ArchivosEstudio(val materiaId: Int)
+@Serializable data class Chat(val sesionId: Int, val sesionTitulo: String)
+
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
@@ -77,97 +67,85 @@ fun Navigation() {
             MateriasScreen(navController = navController, authViewModel = viewModel)
         }
         composable<RegistroMateria> { backStackEntry ->
-            val RegistroMateria: RegistroMateria = backStackEntry.toRoute()
+            val route: RegistroMateria = backStackEntry.toRoute()
             RegistroMateriaScreen(
                 navController = navController,
-                RegistroMateria.registroId,
-                RegistroMateria.materiaId,
-                RegistroMateria.materiaNombre
+                route.registroId,
+                route.materiaId,
+                route.materiaNombre
             )
         }
         composable<Asistencia> { backStackEntry ->
-            val Asistencia: Asistencia = backStackEntry.toRoute()
-            AsistenciaScreen(
-                navController = navController, Asistencia.registroId,
-                viewModel_asistencia
-            )
+            val route: Asistencia = backStackEntry.toRoute()
+            AsistenciaScreen(navController = navController, route.registroId, viewModel_asistencia)
         }
         composable<Horario> { backStackEntry ->
-            val Horario: Horario = backStackEntry.toRoute()
-            HorarioScreen(
-                navController = navController, Horario.registroId,
-                viewModel_horario
-            )
+            val route: Horario = backStackEntry.toRoute()
+            HorarioScreen(navController = navController, route.registroId, viewModel_horario)
         }
-
         composable<AddHorario> { backStackEntry ->
-            val AddHorario: AddHorario = backStackEntry.toRoute()
-            AddHorarioScreen(
-                navController = navController, AddHorario.registroId,
-                viewModel_horario
-            )
+            val route: AddHorario = backStackEntry.toRoute()
+            AddHorarioScreen(navController = navController, route.registroId, viewModel_horario)
         }
         composable<EditHorario> { backStackEntry ->
-            val EditHorario: EditHorario = backStackEntry.toRoute()
-            EditHorarioScreen(
-                navController = navController,
-                EditHorario.registroId,
-                EditHorario.horarioId,
-                viewModel_horario
-            )
+            val route: EditHorario = backStackEntry.toRoute()
+            EditHorarioScreen(navController = navController, route.registroId, route.horarioId, viewModel_horario)
         }
-
         composable<Notas> { backStackEntry ->
-            val Notas: Notas = backStackEntry.toRoute()
-            NotasScreen(
-                navController = navController, Notas.registroId,
-                viewModel_notas
-            )
+            val route: Notas = backStackEntry.toRoute()
+            NotasScreen(navController = navController, route.registroId, viewModel_notas)
         }
-
         composable<AddNotas> { backStackEntry ->
-            val AddNotas: AddNotas = backStackEntry.toRoute()
-            AddNotasScreen(
-                navController = navController, AddNotas.registroId,
-                viewModel_notas
-            )
+            val route: AddNotas = backStackEntry.toRoute()
+            AddNotasScreen(navController = navController, route.registroId, viewModel_notas)
         }
         composable<EditNotas> { backStackEntry ->
-            val EditNotas: EditNotas = backStackEntry.toRoute()
-            EditNotasScreen(
-                navController = navController,
-                EditNotas.registroId,
-                EditNotas.notaId,
-                viewModel_notas
-            )
+            val route: EditNotas = backStackEntry.toRoute()
+            EditNotasScreen(navController = navController, route.registroId, route.notaId, viewModel_notas)
         }
         composable<Logros> { backStackEntry ->
-            val Logros: Logros = backStackEntry.toRoute()
-            LogrosScreen(
-                navController = navController, Logros.registroId,
-                viewModel_logros
+            val route: Logros = backStackEntry.toRoute()
+            LogrosScreen(navController = navController, route.registroId, viewModel_logros)
+        }
+        composable<Sesiones> { backStackEntry ->
+            val route: Sesiones = backStackEntry.toRoute()
+            SesionesScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController,
+                authViewModel = viewModel
             )
         }
-
-            composable<Sesiones> { backStackEntry ->
-                val route: Sesiones = backStackEntry.toRoute()
-                SesionesScreen(
-                    materiaId = route.materiaId,
-                    materiaNombre = route.materiaNombre,
-                    navController = navController,
-                    authViewModel = viewModel
-                )
-            }
-
-            composable<CrearSesion> { backStackEntry ->
-                val route: CrearSesion = backStackEntry.toRoute()
-                CrearSesionScreen(
-                    materiaId = route.materiaId,
-                    materiaNombre = route.materiaNombre,
-                    navController = navController
-                )
-            }
-
+        composable<CrearSesion> { backStackEntry ->
+            val route: CrearSesion = backStackEntry.toRoute()
+            CrearSesionScreen(
+                materiaId = route.materiaId,
+                materiaNombre = route.materiaNombre,
+                navController = navController
+            )
+        }
+        composable<EvaluacionesPracticas> { backStackEntry ->
+            val route: EvaluacionesPracticas = backStackEntry.toRoute()
+            EvaluacionesPracticasScreen(
+                navController = navController,
+                materiaId = route.materiaId
+            )
+        }
+        composable<ArchivosEstudio> { backStackEntry ->
+            val route: ArchivosEstudio = backStackEntry.toRoute()
+            ArchivosEstudioScreen(
+                navController = navController,
+                materiaId = route.materiaId
+            )
+        }
+        composable<Chat> { backStackEntry ->
+            val route: Chat = backStackEntry.toRoute()
+            ChatScreen(
+                sesionId = route.sesionId,
+                sesionTitulo = route.sesionTitulo,
+                navController = navController
+            )
+        }
             composable<TodasSesiones> {
                 TodasSesionesScreen(
                     navController = navController,
@@ -175,5 +153,5 @@ fun Navigation() {
                 )
             }
 
-        }
     }
+}
