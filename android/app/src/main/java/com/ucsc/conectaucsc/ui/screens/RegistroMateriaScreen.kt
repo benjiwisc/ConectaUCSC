@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Folder
@@ -78,7 +78,7 @@ fun RegistroMateriaScreen(
                 "Notas" to Icons.Default.Edit,
                 "Horario" to Icons.Default.Schedule,
                 "Sesiones" to Icons.Default.Schedule,
-                "Evaluaciones Prácticas" to Icons.Default.Assignment,
+                "Evaluaciones Prácticas" to Icons.AutoMirrored.Filled.Assignment,
                 "Archivos de Estudio" to Icons.Default.Folder
             )
 

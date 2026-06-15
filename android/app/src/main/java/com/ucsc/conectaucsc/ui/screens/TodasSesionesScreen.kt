@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.navigation.CrearSesion
+import com.ucsc.conectaucsc.ui.navigation.Chat
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.MateriaViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.SesionViewModel
@@ -325,6 +326,9 @@ fun TodasSesionesScreen(
                                     buscar = buscarText.ifEmpty { null },
                                     orden = ordenSeleccionado
                                 )
+                            },
+                            onChatClick = {
+                                navController.navigate(Chat(sesion.id, sesion.titulo))
                             }
                         )
                     }

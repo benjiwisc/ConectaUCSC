@@ -22,6 +22,7 @@ data class UsuarioSimple(
     val name: String
 )
 
+@Serializable
 data class MateriaSimple(
     val id: Int,
     val nombre: String
