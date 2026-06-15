@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
     Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
     Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
+    Route::get('/sesiones/{id}/mensajes', [SesionEstudioController::class, 'mensajes']);
+    Route::post('/sesiones/{id}/mensajes', [SesionEstudioController::class, 'enviarMensaje']);
 
     Route::get('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'porMateria']);
     Route::post('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'store']);

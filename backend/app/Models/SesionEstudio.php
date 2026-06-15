@@ -29,4 +29,9 @@ class SesionEstudio extends Model
     {
         return $this->belongsToMany(User::class, 'sesion_participantes');
     }
+
+    public function mensajes()
+    {
+        return $this->hasMany(SesionMensaje::class);
+    }
 }
