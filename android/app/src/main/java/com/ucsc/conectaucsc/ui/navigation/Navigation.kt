@@ -39,6 +39,7 @@ data class RegistroMateria(val registroId: Int, val materiaId: Int, val materiaN
 @Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
 @Serializable data class EvaluacionesPracticas(val materiaId: Int)
 @Serializable data class ArchivosEstudio(val materiaId: Int)
+@Serializable data class Chat(val sesionId: Int, val sesionTitulo: String)
 
 @Composable
 fun Navigation() {
@@ -134,6 +135,14 @@ fun Navigation() {
             ArchivosEstudioScreen(
                 navController = navController,
                 materiaId = route.materiaId
+            )
+        }
+        composable<Chat> { backStackEntry ->
+            val route: Chat = backStackEntry.toRoute()
+            ChatScreen(
+                sesionId = route.sesionId,
+                sesionTitulo = route.sesionTitulo,
+                navController = navController
             )
         }
     }
