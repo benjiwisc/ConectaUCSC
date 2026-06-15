@@ -1,25 +1,18 @@
 package com.ucsc.conectaucsc.di
 
-import com.ucsc.conectaucsc.data.remote.AuthApiService
+import android.content.Context
+import com.ucsc.conectaucsc.data.remote.*
+import com.ucsc.conectaucsc.utils.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import com.ucsc.conectaucsc.data.remote.MateriaApiService
-import android.content.Context
-import com.ucsc.conectaucsc.data.remote.AsistenciasApiService
-import com.ucsc.conectaucsc.data.remote.HorariosApiService
-import com.ucsc.conectaucsc.data.remote.LogrosApiService
-import com.ucsc.conectaucsc.data.remote.NotasApiService
-import com.ucsc.conectaucsc.data.remote.RegistroApiService
-import com.ucsc.conectaucsc.utils.SessionManager
-import dagger.hilt.android.qualifiers.ApplicationContext
-import com.ucsc.conectaucsc.data.remote.SesionApiService
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,6 +23,7 @@ object NetworkModule {
     fun provideSessionManager(@ApplicationContext context: Context): SessionManager {
         return SessionManager(context)
     }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(sessionManager: SessionManager): OkHttpClient {
@@ -62,49 +56,41 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
-    }
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService = retrofit.create(AuthApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideMateriaApiService(retrofit: Retrofit): MateriaApiService {
-        return retrofit.create(MateriaApiService::class.java)
-    }
+    fun provideMateriaApiService(retrofit: Retrofit): MateriaApiService = retrofit.create(MateriaApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideAsistenciasApiService(retrofit: Retrofit): AsistenciasApiService {
-        return retrofit.create(AsistenciasApiService::class.java)
-    }
+    fun provideAsistenciasApiService(retrofit: Retrofit): AsistenciasApiService = retrofit.create(AsistenciasApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideHorariosApiService(retrofit: Retrofit): HorariosApiService {
-        return retrofit.create(HorariosApiService::class.java)
-    }
+    fun provideHorariosApiService(retrofit: Retrofit): HorariosApiService = retrofit.create(HorariosApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideLogrosApiService(retrofit: Retrofit): LogrosApiService {
-        return retrofit.create(LogrosApiService::class.java)
-    }
+    fun provideLogrosApiService(retrofit: Retrofit): LogrosApiService = retrofit.create(LogrosApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideNotasApiService(retrofit: Retrofit): NotasApiService {
-        return retrofit.create(NotasApiService::class.java)
-    }
+    fun provideNotasApiService(retrofit: Retrofit): NotasApiService = retrofit.create(NotasApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideRegistroApiService(retrofit: Retrofit): RegistroApiService {
-        return retrofit.create(RegistroApiService::class.java)
-    }
+    fun provideRegistroApiService(retrofit: Retrofit): RegistroApiService = retrofit.create(RegistroApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideSesionApiService(retrofit: Retrofit): SesionApiService {
-        return retrofit.create(SesionApiService::class.java)
-    }
+    fun provideSesionApiService(retrofit: Retrofit): SesionApiService = retrofit.create(SesionApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideEvaluacionesPracticasApiService(retrofit: Retrofit): EvaluacionesPracticasApiService = retrofit.create(EvaluacionesPracticasApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideArchivosEstudioApiService(retrofit: Retrofit): ArchivosEstudioApiService = retrofit.create(ArchivosEstudioApiService::class.java)
 }
