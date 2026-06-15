@@ -10,6 +10,8 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttainmentController;
 use App\Http\Controllers\Api\SesionEstudioController;
+use App\Http\Controllers\Api\PracticalEvaluationController;
+use App\Http\Controllers\Api\FileManagementController;
 
 // Rutas públicas
 Route::post('/register', [AuthController::class, 'register']);
@@ -32,6 +34,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mis-sesiones', [SesionEstudioController::class, 'misSesiones']);
     Route::post('/sesiones', [SesionEstudioController::class, 'crear']);
     Route::post('/sesiones/{id}/unirse', [SesionEstudioController::class, 'unirse']);
+
+    Route::get('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'porMateria']);
+    Route::post('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'store']);
+    Route::get('/evaluaciones-practicas/{evaluationId}/descargar', [PracticalEvaluationController::class, 'download']);
+    Route::post('/evaluaciones-practicas/{evaluationId}/hecha', [PracticalEvaluationController::class, 'marcarHecha']);
+    Route::delete('/evaluaciones-practicas/{evaluationId}', [PracticalEvaluationController::class, 'destroy']);
+
+    Route::get('/materias/{materiaId}/file-management', [FileManagementController::class, 'porMateria']);
+    Route::post('/materias/{materiaId}/file-management', [FileManagementController::class, 'store']);
+    Route::get('/file-management/{fileId}/descargar', [FileManagementController::class, 'download']);
+    Route::delete('/file-management/{fileId}', [FileManagementController::class, 'destroy']);
     
     Route::delete('/sesiones/{id}/salirse', [SesionEstudioController::class, 'salirse']);
     Route::delete('/sesiones/{id}/finalizar', [SesionEstudioController::class, 'finalizar']);

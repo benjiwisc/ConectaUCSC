@@ -21,4 +21,14 @@ class Materia extends Model
     public function record() {
         return $this->hasOne(Record::class);
     }
+
+    public function practicalEvaluations()
+    {
+        return $this->hasMany(PracticalEvaluation::class);
+    }
+
+    public function fileManagementItems()
+    {
+        return $this->hasMany(FileManagement::class, 'materia_id');
+    }
 }

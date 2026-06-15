@@ -28,4 +28,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Materia::class, 'usuario_materias')->withPivot('id');
     }
+
+    public function practicalEvaluations()
+    {
+        return $this->hasMany(PracticalEvaluation::class);
+    }
+
+    public function practicalEvaluationCompletions()
+    {
+        return $this->hasMany(PracticalEvaluationCompletion::class);
+    }
+
+    public function fileManagementItems()
+    {
+        return $this->hasMany(FileManagement::class, 'user_id');
+    }
 }
