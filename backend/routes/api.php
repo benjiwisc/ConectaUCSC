@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'porMateria']);
     Route::post('/materias/{materiaId}/evaluaciones-practicas', [PracticalEvaluationController::class, 'store']);
+    Route::get('/evaluaciones-practicas/{evaluationId}', [PracticalEvaluationController::class, 'show']);
     Route::get('/evaluaciones-practicas/{evaluationId}/descargar', [PracticalEvaluationController::class, 'download']);
     Route::post('/evaluaciones-practicas/{evaluationId}/hecha', [PracticalEvaluationController::class, 'marcarHecha']);
     Route::delete('/evaluaciones-practicas/{evaluationId}', [PracticalEvaluationController::class, 'destroy']);

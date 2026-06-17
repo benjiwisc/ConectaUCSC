@@ -10,10 +10,16 @@ class PracticalEvaluationCompletion extends Model
         'practical_evaluation_id',
         'user_id',
         'completed_at',
+        'nota',
+        'puntaje',
+        'correctas',
+        'total_preguntas',
+        'respuestas',
     ];
 
     protected $casts = [
         'completed_at' => 'datetime',
+        'respuestas' => 'array',
     ];
 
     public function evaluation()

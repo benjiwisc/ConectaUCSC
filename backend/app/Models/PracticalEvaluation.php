@@ -14,6 +14,12 @@ class PracticalEvaluation extends Model
         'titulo',
         'descripcion',
         'pdf_path',
+        'tipo',
+        'contenido',
+    ];
+
+    protected $casts = [
+        'contenido' => 'array',
     ];
 
     public function materia()
