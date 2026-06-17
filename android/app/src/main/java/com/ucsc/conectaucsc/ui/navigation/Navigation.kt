@@ -39,6 +39,8 @@ data class RegistroMateria(val registroId: Int, val materiaId: Int, val materiaN
 @Serializable data class CrearSesion(val materiaId: Int, val materiaNombre: String)
 @Serializable object TodasSesiones
 @Serializable data class EvaluacionesPracticas(val materiaId: Int)
+@Serializable data class DetalleCuestionario(val evaluationId: Int)
+@Serializable data class CrearCuestionario(val materiaId: Int)
 @Serializable data class ArchivosEstudio(val materiaId: Int)
 @Serializable data class Chat(val sesionId: Int, val sesionTitulo: String)
 
@@ -131,6 +133,20 @@ fun Navigation() {
                 materiaId = route.materiaId
             )
         }
+        composable<DetalleCuestionario> { backStackEntry ->
+            val route: DetalleCuestionario = backStackEntry.toRoute()
+            DetalleCuestionarioScreen(
+                navController = navController,
+                evaluationId = route.evaluationId
+            )
+        }
+        composable<CrearCuestionario> { backStackEntry ->
+            val route: CrearCuestionario = backStackEntry.toRoute()
+            CrearCuestionarioScreen(
+                navController = navController,
+                materiaId = route.materiaId
+            )
+        }
         composable<ArchivosEstudio> { backStackEntry ->
             val route: ArchivosEstudio = backStackEntry.toRoute()
             ArchivosEstudioScreen(
@@ -146,12 +162,11 @@ fun Navigation() {
                 navController = navController
             )
         }
-            composable<TodasSesiones> {
-                TodasSesionesScreen(
-                    navController = navController,
-                    authViewModel = viewModel
-                )
-            }
-
+        composable<TodasSesiones> {
+            TodasSesionesScreen(
+                navController = navController,
+                authViewModel = viewModel
+            )
+        }
     }
 }

@@ -1,10 +1,7 @@
 package com.ucsc.conectaucsc.data.repository
 
-import com.ucsc.conectaucsc.data.model.EvaluacionPractica
+import com.ucsc.conectaucsc.data.model.*
 import com.ucsc.conectaucsc.data.remote.EvaluacionesPracticasApiService
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import javax.inject.Inject
@@ -12,7 +9,7 @@ import javax.inject.Inject
 class EvaluacionesPracticasRepository @Inject constructor(
     private val api: EvaluacionesPracticasApiService
 ) {
-    suspend fun getEvaluaciones(materiaId: Int): Result<List<EvaluacionPractica>> {
+    suspend fun getEvaluaciones(materiaId: Int): Result<List<PracticalEvaluationDto>> {
         return try {
             val response = api.getEvaluaciones(materiaId)
             if (response.isSuccessful) Result.success(response.body() ?: emptyList())
@@ -22,16 +19,9 @@ class EvaluacionesPracticasRepository @Inject constructor(
         }
     }
 
-    suspend fun createEvaluacion(
-        materiaId: Int,
-        titulo: String,
-        descripcion: String,
-        pdf: MultipartBody.Part?
-    ): Result<EvaluacionPractica> {
+    suspend fun getDetalleEvaluacion(evaluationId: Int): Result<PracticalEvaluationDto> {
         return try {
-            val tituloBody = titulo.toRequestBody("text/plain".toMediaTypeOrNull())
-            val descripcionBody = descripcion.toRequestBody("text/plain".toMediaTypeOrNull())
-            val response = api.createEvaluacion(materiaId, tituloBody, descripcionBody, pdf)
+            val response = api.getDetalleEvaluacion(evaluationId)
             if (response.isSuccessful) Result.success(response.body()!!)
             else Result.failure(Exception(parseError(response.errorBody())))
         } catch (e: Exception) {
@@ -39,9 +29,25 @@ class EvaluacionesPracticasRepository @Inject constructor(
         }
     }
 
-    suspend fun marcarComoHecha(evaluationId: Int): Result<EvaluacionPractica> {
+    suspend fun createQuiz(
+        materiaId: Int,
+        request: CreatePracticalEvaluationRequest
+    ): Result<PracticalEvaluationDto> {
         return try {
-            val response = api.marcarComoHecha(evaluationId)
+            val response = api.createQuiz(materiaId, request)
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception(parseError(response.errorBody())))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun submitQuiz(
+        evaluationId: Int,
+        respuestas: List<Int>
+    ): Result<SubmitQuizResponseDto> {
+        return try {
+            val response = api.submitQuiz(evaluationId, SubmitPracticalEvaluationRequest(respuestas))
             if (response.isSuccessful) Result.success(response.body()!!)
             else Result.failure(Exception(parseError(response.errorBody())))
         } catch (e: Exception) {
