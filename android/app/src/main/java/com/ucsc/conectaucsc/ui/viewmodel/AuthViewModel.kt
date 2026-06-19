@@ -73,6 +73,32 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    private val _userProfile = MutableStateFlow<com.ucsc.conectaucsc.data.model.User?>(null)
+    val userProfile: StateFlow<com.ucsc.conectaucsc.data.model.User?> = _userProfile
+
+    private val _userStats = MutableStateFlow<com.ucsc.conectaucsc.data.model.UserStats?>(null)
+    val userStats: StateFlow<com.ucsc.conectaucsc.data.model.UserStats?> = _userStats
+
+    fun loadUserProfile() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getMe().onSuccess {
+                _userProfile.value = it
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun loadUserStats() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getUserStats().onSuccess {
+                _userStats.value = it
+            }
+            _isLoading.value = false
+        }
+    }
+
     fun isLoggedIn(): Boolean = sessionManager.isLoggedIn()
     fun getUserName(): String = sessionManager.getUserName() ?: "Usuario"
     fun getCarreraId(): Int? = sessionManager.getCarreraId()
@@ -81,6 +107,8 @@ class AuthViewModel @Inject constructor(
 
     fun logout() {
         sessionManager.clearSession()
+        _userProfile.value = null
+        _userStats.value = null
         _authResult.value = null
     }
 }

@@ -23,6 +23,7 @@ import kotlinx.serialization.Serializable
 @Serializable object Register
 @Serializable object Home
 @Serializable object Materias
+@Serializable object Profile
 
 @Serializable
 data class RegistroMateria(val registroId: Int, val materiaId: Int, val materiaNombre: String)
@@ -166,6 +167,12 @@ fun Navigation() {
             TodasSesionesScreen(
                 navController = navController,
                 authViewModel = viewModel
+            )
+        }
+        composable<Profile> {
+            PerfilScreen(
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }

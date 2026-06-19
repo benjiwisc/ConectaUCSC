@@ -8,5 +8,19 @@ data class User(
     val name: String,
     val email: String,
     val carrera_id: Int?,
-    val facultad_id: Int?
+    val facultad_id: Int?,
+    val carrera: CarreraUserRelation? = null,
+    val facultad: FacultadUserRelation? = null
+)
+
+@Serializable
+data class CarreraUserRelation(
+    val id: Int,
+    val nombre: String
+)
+
+@Serializable
+data class FacultadUserRelation(
+    val id: Int,
+    val nombre: String
 )

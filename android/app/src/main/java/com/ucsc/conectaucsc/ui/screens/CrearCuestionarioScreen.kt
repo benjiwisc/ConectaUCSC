@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -119,12 +120,16 @@ fun CrearCuestionarioScreen(
                 }
 
                 item {
-                    Button(
+                    OutlinedButton(
                         onClick = { preguntas.add(QuestionData()) },
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text("Añadir Pregunta")
                     }
                 }

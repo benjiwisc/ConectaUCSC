@@ -9,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface NotasApiService {
     @GET("notas/{recordId}")
@@ -30,5 +31,8 @@ interface NotasApiService {
     suspend fun getPromedio(@Path("recordId") recordId: Int): Response<Grade>
 
     @GET("notas/{recordId}/nota-necesaria")
-    suspend fun getNotaNecesaria(@Path("recordId") recordId: Int): Response<NotaNecesariaResponse>
+    suspend fun getNotaNecesaria(
+        @Path("recordId") recordId: Int,
+        @Query("nota_aprobacion") notaAprobacion: Double? = null
+    ): Response<NotaNecesariaResponse>
 }

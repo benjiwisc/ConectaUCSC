@@ -24,6 +24,16 @@ class User extends Authenticatable
         'remember_token',
     ];
     
+    public function carrera()
+    {
+        return $this->belongsTo(Carrera::class);
+    }
+
+    public function facultad()
+    {
+        return $this->belongsTo(Facultad::class);
+    }
+
     public function materias()
     {
         return $this->belongsToMany(Materia::class, 'usuario_materias')->withPivot('id');

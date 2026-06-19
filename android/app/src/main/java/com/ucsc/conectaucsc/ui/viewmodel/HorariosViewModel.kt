@@ -19,6 +19,9 @@ class HorariosViewModel @Inject constructor(
     private val _horarios = MutableStateFlow<List<Schedule>>(emptyList())
     val horarios: StateFlow<List<Schedule>> = _horarios
 
+    private val _todosHorarios = MutableStateFlow<List<Schedule>>(emptyList())
+    val todosHorarios: StateFlow<List<Schedule>> = _todosHorarios.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -26,6 +29,18 @@ class HorariosViewModel @Inject constructor(
     val mensaje: StateFlow<String?> = _mensaje
     private val _horarioDetalle = MutableStateFlow<Schedule?>(null)
     val horarioDetalle: StateFlow<Schedule?> = _horarioDetalle.asStateFlow()
+
+    fun cargarTodosHorarios() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getTodosHorarios().onSuccess {
+                _todosHorarios.value = it
+            }.onFailure {
+                _mensaje.value = it.message
+            }
+            _isLoading.value = false
+        }
+    }
 
     fun cargarHorarios(recordId: Int) {
         viewModelScope.launch {

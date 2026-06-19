@@ -1,31 +1,19 @@
 package com.ucsc.conectaucsc.ui.screens.asistencia
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -118,81 +106,154 @@ fun AsistenciaScreen(
 
                     items(asistencias) { asistencia ->
 
+                        val isPresente = asistencia.estado.equals("Presente", ignoreCase = true)
+                        val statusColor = if (isPresente) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                        val statusIcon = if (isPresente) Icons.Default.CheckCircle else Icons.Default.Cancel
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 4.dp
-                            )
+                                .padding(vertical = 6.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-
-                            Column(
-                                modifier = Modifier.padding(16.dp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(IntrinsicSize.Min),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-
-                                Text(
-                                    text = asistencia.fecha,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp
+                                // Left border colored bar (Crimson/Navy)
+                                Box(
+                                    modifier = Modifier
+                                        .width(6.dp)
+                                        .fillMaxHeight()
+                                        .background(statusColor)
                                 )
 
-                                Spacer(
-                                    modifier = Modifier.height(8.dp)
-                                )
-
-                                Text(
-                                    text = "Estado: ${asistencia.estado}",
-                                    fontSize = 15.sp
-                                )
-
-                                Spacer(
-                                    modifier = Modifier.height(16.dp)
-                                )
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 16.dp, vertical = 12.dp)
                                 ) {
-
-                                    OutlinedButton(
-                                        onClick = {
-                                            AsistenciasViewModel.justificarAsistencia(
-                                                asistencia.id,
-                                                asistencia.record_id
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        // Left Icon container
+                                        Box(
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .background(
+                                                    color = statusColor.copy(alpha = 0.12f),
+                                                    shape = RoundedCornerShape(8.dp)
+                                                ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                imageVector = statusIcon,
+                                                contentDescription = null,
+                                                tint = statusColor,
+                                                modifier = Modifier.size(22.dp)
                                             )
                                         }
-                                    ) {
-                                        Text("Cancelar")
+
+                                        // Content Details
+                                        Column(
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text(
+                                                text = asistencia.fecha,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(modifier = Modifier.height(2.dp))
+                                            Text(
+                                                text = "Estado: ${asistencia.estado}",
+                                                fontSize = 13.sp,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                        }
+
+                                        // Right status badge
+                                        SuggestionChip(
+                                            onClick = {},
+                                            label = { Text(text = asistencia.estado, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
+                                            colors = SuggestionChipDefaults.suggestionChipColors(
+                                                containerColor = statusColor.copy(alpha = 0.12f),
+                                                labelColor = statusColor
+                                            ),
+                                            border = BorderStroke(1.dp, statusColor.copy(alpha = 0.3f))
+                                        )
                                     }
 
-                                    Spacer(
-                                        modifier = Modifier.width(8.dp)
-                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
 
-                                    Button(
-                                        onClick = {
-                                            AsistenciasViewModel.deleteAsistencia(
-                                                asistencia.id,
-                                                asistencia.record_id
-                                            )
-                                        }
+                                    // Action buttons row
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text("Eliminar")
-                                    }
-                                    Spacer(
-                                        modifier = Modifier.width(8.dp)
-                                    )
+                                        // Cancelar button (justifies attendance)
+                                        OutlinedButton(
+                                            onClick = {
+                                                AsistenciasViewModel.justificarAsistencia(
+                                                    asistencia.id,
+                                                    asistencia.record_id
+                                                )
+                                            },
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                                        ) {
+                                            Text("Cancelar", fontSize = 12.sp)
+                                        }
 
-                                    Button(
-                                        onClick = {
-                                            AsistenciasViewModel.updateAsistencia(
-                                                asistencia.id,
-                                                asistencia.record_id
-                                            )
+                                        Spacer(modifier = Modifier.width(6.dp))
+
+                                        // Edit button
+                                        OutlinedButton(
+                                            onClick = {
+                                                AsistenciasViewModel.updateAsistencia(
+                                                    asistencia.id,
+                                                    asistencia.record_id
+                                                )
+                                            },
+                                            modifier = Modifier.height(36.dp),
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                                        ) {
+                                            Icon(Icons.Default.Edit, contentDescription = "Editar", modifier = Modifier.size(14.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("Editar", fontSize = 12.sp)
                                         }
-                                    ) {
-                                        Text("Editar")
+
+                                        Spacer(modifier = Modifier.width(6.dp))
+
+                                        // Delete button
+                                        OutlinedButton(
+                                            onClick = {
+                                                AsistenciasViewModel.deleteAsistencia(
+                                                    asistencia.id,
+                                                    asistencia.record_id
+                                                )
+                                            },
+                                            modifier = Modifier.height(36.dp),
+                                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.8f)),
+                                            colors = ButtonDefaults.outlinedButtonColors(
+                                                contentColor = MaterialTheme.colorScheme.error
+                                            ),
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+                                        ) {
+                                            Icon(Icons.Default.Delete, contentDescription = "Eliminar", modifier = Modifier.size(14.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("Eliminar", fontSize = 12.sp)
+                                        }
                                     }
                                 }
                             }

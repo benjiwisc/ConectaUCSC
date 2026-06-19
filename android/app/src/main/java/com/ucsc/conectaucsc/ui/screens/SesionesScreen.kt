@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -167,51 +168,70 @@ fun SesionCard(
                 text = "Participantes: ${sesion.participantes?.size ?: 0}",
                 fontSize = 13.sp
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            when {
-                esCreador -> {
-                    Button(
-                        onClick = onFinalizar,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text("Finalizar sesión")
-                    }
-                }
-                yaParticipa -> {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // El botón de chat se muestra a la izquierda si es creador o ya participa
+                if (yaParticipa || esCreador) {
                     OutlinedButton(
-                        onClick = onSalirse,
-                        modifier = Modifier.fillMaxWidth()
+                        onClick = onChatClick,
+                        modifier = Modifier.weight(1f),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.secondary
+                        ),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                     ) {
-                        Text("Abandonar sesión")
+                        Icon(Icons.Default.Chat, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Chat", fontSize = 12.sp)
                     }
                 }
-                else -> {
-                    Button(
-                        onClick = onUnirse,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Unirse a la sesión")
-                    }
-                }
-            }
 
-            // El botón de chat solo se muestra si es el creador o si ya se unió
-            if (yaParticipa || esCreador) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    onClick = onChatClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    )
-                ) {
-                    Icon(Icons.Default.Chat, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Chat de Tutoría")
+                val actionButtonWeight = if (yaParticipa || esCreador) 1f else 2f
+                when {
+                    esCreador -> {
+                        OutlinedButton(
+                            onClick = onFinalizar,
+                            modifier = Modifier.weight(actionButtonWeight),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.error
+                            ),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                        ) {
+                            Text("Finalizar", fontSize = 12.sp)
+                        }
+                    }
+                    yaParticipa -> {
+                        OutlinedButton(
+                            onClick = onSalirse,
+                            modifier = Modifier.weight(actionButtonWeight),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                        ) {
+                            Text("Salir", fontSize = 12.sp)
+                        }
+                    }
+                    else -> {
+                        Button(
+                            onClick = onUnirse,
+                            modifier = Modifier.weight(actionButtonWeight),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                        ) {
+                            Text("Unirse", fontSize = 12.sp)
+                        }
+                    }
                 }
             }
         }

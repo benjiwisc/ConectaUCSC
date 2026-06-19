@@ -5,6 +5,16 @@ import com.ucsc.conectaucsc.data.remote.HorariosApiService
 import javax.inject.Inject
 
 class HorariosRepository @Inject constructor(private val api: HorariosApiService){
+    suspend fun getTodosHorarios(): Result<List<Schedule>> {
+        return try {
+            val response = api.getTodosHorarios()
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar horarios"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
     suspend fun getHorarios(recordId: Int): Result<List<Schedule>> {
         return try {
             val response = api.getHorarios(recordId)

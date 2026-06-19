@@ -33,7 +33,10 @@ class NotasViewModel @Inject constructor(
     private val _notaDetalle = MutableStateFlow<Grade?>(null)
     val notaDetalle: StateFlow<Grade?> = _notaDetalle.asStateFlow()
 
-    fun cargarNotas(recordId: Int) {
+    private var ultimoMinGrade: Double? = null
+
+    fun cargarNotas(recordId: Int, notaAprobacion: Double? = ultimoMinGrade) {
+        ultimoMinGrade = notaAprobacion
         viewModelScope.launch {
             _isLoading.value = true
             repository.getNotas(recordId).onSuccess {
@@ -41,7 +44,7 @@ class NotasViewModel @Inject constructor(
             }.onFailure {
                 _mensaje.value = it.message
             }
-            repository.getNotaNecesaria(recordId).onSuccess {
+            repository.getNotaNecesaria(recordId, notaAprobacion).onSuccess {
                 _notaNecesaria.value = it
             }.onFailure {
                 // Se ignora silenciosamente si falla para no arruinar la carga de notas

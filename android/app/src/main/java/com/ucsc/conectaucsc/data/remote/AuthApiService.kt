@@ -5,6 +5,8 @@ import com.ucsc.conectaucsc.data.model.Carrera
 import com.ucsc.conectaucsc.data.model.Facultad
 import com.ucsc.conectaucsc.data.model.LoginRequest
 import com.ucsc.conectaucsc.data.model.RegisterRequest
+import com.ucsc.conectaucsc.data.model.User
+import com.ucsc.conectaucsc.data.model.UserStats
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,4 +25,10 @@ interface AuthApiService {
 
     @GET("facultades/{id}/carreras")
     suspend fun getCarreras(@Path("id") facultadId: Int): Response<List<Carrera>>
+
+    @GET("me")
+    suspend fun getMe(): Response<User>
+
+    @GET("user/stats")
+    suspend fun getUserStats(): Response<UserStats>
 }

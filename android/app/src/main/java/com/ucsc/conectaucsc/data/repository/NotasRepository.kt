@@ -56,9 +56,9 @@ class NotasRepository  @Inject constructor(private val api: NotasApiService){
         }
     }
 
-    suspend fun getNotaNecesaria(recordId: Int): Result<NotaNecesariaResponse> {
+    suspend fun getNotaNecesaria(recordId: Int, notaAprobacion: Double?): Result<NotaNecesariaResponse> {
         return try {
-            val response = api.getNotaNecesaria(recordId)
+            val response = api.getNotaNecesaria(recordId, notaAprobacion)
             if (response.isSuccessful) Result.success(response.body()!!)
             else Result.failure(Exception("Error al calcular nota necesaria"))
         } catch (e: Exception) {

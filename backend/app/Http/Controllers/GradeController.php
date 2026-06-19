@@ -71,8 +71,8 @@ class GradeController extends Controller
         return response()->json(['promedio' => round($promedio, 1)]);
     }
 
-    // calcula la nota necesaria para aprobar el ramo (con nota 4.0)
-    public function notaNecesaria($recordId) {
+    // calcula la nota necesaria para aprobar el ramo (con nota 4.0 por defecto o personalizada)
+    public function notaNecesaria(Request $request, $recordId) {
         $grades = Grade::where('record_id', $recordId)->get();
 
         $sumaPorcentajes = $grades->sum('porcentaje');
@@ -83,7 +83,15 @@ class GradeController extends Controller
         });
 
         $porcentajeRestante = 100 - $sumaPorcentajes;
+        
         $notaAprobacion = 4.0;
+        if ($request->has('nota_aprobacion')) {
+            $val = floatval($request->query('nota_aprobacion'));
+            if ($val >= 1.0 && $val <= 7.0) {
+                $notaAprobacion = $val;
+            }
+        }
+        
         $notaNecesaria = 1.0;
         $estado = 'cursando';
 

@@ -12,32 +12,54 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = UcscRedDark,
+    onPrimary = UcscRedOnDark,
+    primaryContainer = UcscRedContainerDark,
+    onPrimaryContainer = UcscRedOnContainerDark,
+    secondary = UcscNavyDark,
+    onSecondary = UcscNavyOnDark,
+    secondaryContainer = UcscNavyContainerDark,
+    onSecondaryContainer = UcscNavyOnContainerDark,
+    tertiary = UcscGoldDark,
+    onTertiary = UcscGoldOnDark,
+    tertiaryContainer = UcscGoldContainerDark,
+    onTertiaryContainer = UcscGoldOnContainerDark,
+    background = NeutralDarkBackground,
+    onBackground = NeutralDarkOnBackground,
+    surface = NeutralDarkSurface,
+    onSurface = NeutralDarkOnSurface,
+    surfaceVariant = NeutralDarkSurfaceVariant,
+    onSurfaceVariant = NeutralDarkOnSurfaceVariant,
+    outline = NeutralDarkOutline
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = UcscRedLight,
+    onPrimary = UcscRedOnLight,
+    primaryContainer = UcscRedContainerLight,
+    onPrimaryContainer = UcscRedOnContainerLight,
+    secondary = UcscNavyLight,
+    onSecondary = UcscNavyOnLight,
+    secondaryContainer = UcscNavyContainerLight,
+    onSecondaryContainer = UcscNavyOnContainerLight,
+    tertiary = UcscGoldLight,
+    onTertiary = UcscGoldOnLight,
+    tertiaryContainer = UcscGoldContainerLight,
+    onTertiaryContainer = UcscGoldOnContainerLight,
+    background = NeutralLightBackground,
+    onBackground = NeutralLightOnBackground,
+    surface = NeutralLightSurface,
+    onSurface = NeutralLightOnSurface,
+    surfaceVariant = NeutralLightSurfaceVariant,
+    onSurfaceVariant = NeutralLightOnSurfaceVariant,
+    outline = NeutralLightOutline
 )
 
 @Composable
 fun ConectaUCSCTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Set to false by default to enforce brand color consistency
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

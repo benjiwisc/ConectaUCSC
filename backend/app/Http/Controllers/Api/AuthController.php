@@ -69,6 +69,32 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        return response()->json($request->user()->load(['carrera', 'facultad']));
+    }
+
+    public function stats(Request $request)
+    {
+        $user = $request->user();
+
+        $materiasCount = $user->materias()->count();
+
+        $recordIds = \App\Models\Record::whereIn('usuario_materia_id', function ($query) use ($user) {
+            $query->select('id')
+                  ->from('usuario_materias')
+                  ->where('user_id', $user->id);
+        })->pluck('id');
+
+        $promedioGeneral = \App\Models\Grade::whereIn('record_id', $recordIds)->avg('nota');
+
+        $sesionesCount = \App\Models\SesionEstudio::where('user_id', $user->id)
+            ->orWhereHas('participantes', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->count();
+
+        return response()->json([
+            'materias_count' => $materiasCount,
+            'promedio_general' => $promedioGeneral ? round($promedioGeneral, 2) : 0.0,
+            'sesiones_count' => $sesionesCount,
+        ]);
     }
 }

@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class UsuarioMateria extends Model
 {
     protected $fillable = ['id','user_id', 'materia_id'];
+
+    public function materia() {
+        return $this->belongsTo(Materia::class);
+    }
 }

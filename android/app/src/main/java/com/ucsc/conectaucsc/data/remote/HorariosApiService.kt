@@ -11,6 +11,9 @@ import retrofit2.http.Path
 
 interface HorariosApiService {
 
+    @GET("horarios/all")
+    suspend fun getTodosHorarios(): Response<List<Schedule>>
+
     @GET("horarios/{recordId}")
     suspend fun getHorarios(@Path("recordId") recordId: Int): Response<List<Schedule>>
 

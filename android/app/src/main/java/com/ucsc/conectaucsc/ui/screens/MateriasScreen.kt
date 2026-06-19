@@ -1,12 +1,18 @@
 package com.ucsc.conectaucsc.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,8 +26,6 @@ import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.viewmodel.AuthViewModel
 import com.ucsc.conectaucsc.ui.viewmodel.MateriaViewModel
 import com.ucsc.conectaucsc.ui.navigation.Sesiones
-
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import com.ucsc.conectaucsc.ui.navigation.RegistroMateria
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,17 +106,94 @@ fun MateriasScreen(
             ) {
                 items(misMaterias) { materia ->
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        onClick = { navController.navigate(RegistroMateria(materia.id_registro,materia.id, materia.nombre)) }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        onClick = { navController.navigate(RegistroMateria(materia.id_registro,materia.id, materia.nombre)) },
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(materia.nombre, fontWeight = FontWeight.Medium, fontSize = 16.sp)
-                            IconButton(onClick = { materiaViewModel.eliminarMateria(materia.id) }) {
-                                Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = MaterialTheme.colorScheme.error)
+                            // Left border colored bar matching primary color (Crimson)
+                            Box(
+                                modifier = Modifier
+                                    .width(6.dp)
+                                    .fillMaxHeight()
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                // School icon container
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                            shape = RoundedCornerShape(8.dp)
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.School,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+
+                                // Subject Text details
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = materia.nombre,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(
+                                        text = "Cursando ramo",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+
+                                // Actions section
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    IconButton(
+                                        onClick = { materiaViewModel.eliminarMateria(materia.id) }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Eliminar ramo",
+                                            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                                        )
+                                    }
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        contentDescription = "Ver detalles",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
                             }
                         }
                     }

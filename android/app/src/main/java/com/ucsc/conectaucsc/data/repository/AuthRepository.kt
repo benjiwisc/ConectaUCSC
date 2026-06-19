@@ -76,4 +76,24 @@ class AuthRepository @Inject constructor(
             Result.failure(Exception("Error de conexión"))
         }
     }
+
+    suspend fun getMe(): Result<com.ucsc.conectaucsc.data.model.User> {
+        return try {
+            val response = api.getMe()
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar datos de perfil"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
+
+    suspend fun getUserStats(): Result<com.ucsc.conectaucsc.data.model.UserStats> {
+        return try {
+            val response = api.getUserStats()
+            if (response.isSuccessful) Result.success(response.body()!!)
+            else Result.failure(Exception("Error al cargar estadísticas"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error de conexión"))
+        }
+    }
 }

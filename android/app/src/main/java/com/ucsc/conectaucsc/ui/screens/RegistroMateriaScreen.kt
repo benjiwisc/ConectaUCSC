@@ -1,30 +1,24 @@
 package com.ucsc.conectaucsc.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.ui.navigation.ArchivosEstudio
 import com.ucsc.conectaucsc.ui.navigation.Asistencia
@@ -45,11 +39,9 @@ fun RegistroMateriaScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalle de Materia") },
+                title = { Text(nombreMateria, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver"
@@ -57,57 +49,164 @@ fun RegistroMateriaScreen(
                     }
                 }
             )
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(
-                12.dp,
-                Alignment.CenterVertically
-            ),
+                .padding(horizontal = 20.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Header Info
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Text(
+                    text = "Panel de Asignatura",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Revisa tu asistencia, notas, material y tutorías para este ramo.",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
 
-            val botones = listOf(
-                "Asistencia" to Icons.Default.DateRange,
-                "Logros" to Icons.Default.Star,
-                "Notas" to Icons.Default.Edit,
-                "Horario" to Icons.Default.Schedule,
-                "Sesiones" to Icons.Default.Schedule,
-                "Evaluaciones Prácticas" to Icons.AutoMirrored.Filled.Assignment,
-                "Archivos de Estudio" to Icons.Default.Folder
+            // Grid Layout (Rows of 2 columns)
+            // Row 1: Clases
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SubjectOptionCard(
+                    title = "Asistencia",
+                    description = "Registro de firmas",
+                    icon = Icons.Default.DateRange,
+                    onClick = { navController.navigate(Asistencia(registroId)) },
+                    modifier = Modifier.weight(1f)
+                )
+                SubjectOptionCard(
+                    title = "Horario",
+                    description = "Bloques de clases",
+                    icon = Icons.Default.Schedule,
+                    onClick = { navController.navigate(Horario(registroId)) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Row 2: Académico
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SubjectOptionCard(
+                    title = "Notas",
+                    description = "Notas y promedios",
+                    icon = Icons.Default.Edit,
+                    onClick = { navController.navigate(Notas(registroId)) },
+                    modifier = Modifier.weight(1f)
+                )
+                SubjectOptionCard(
+                    title = "Evaluaciones",
+                    description = "Tareas y certámenes",
+                    icon = Icons.AutoMirrored.Filled.Assignment,
+                    onClick = { navController.navigate(EvaluacionesPracticas(materiaId)) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Row 3: Estudio
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SubjectOptionCard(
+                    title = "Tutorías",
+                    description = "Sesiones de estudio",
+                    icon = Icons.Default.Groups,
+                    onClick = { navController.navigate(Sesiones(materiaId, nombreMateria)) },
+                    modifier = Modifier.weight(1f)
+                )
+                SubjectOptionCard(
+                    title = "Materiales",
+                    description = "Archivos de estudio",
+                    icon = Icons.Default.Folder,
+                    onClick = { navController.navigate(ArchivosEstudio(materiaId)) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Row 4: Logros (Full Width)
+            SubjectOptionCard(
+                title = "Logros y Metas",
+                description = "Monitorea tus insignias y metas obtenidas para este ramo",
+                icon = Icons.Default.Star,
+                onClick = { navController.navigate(Logros(registroId)) },
+                modifier = Modifier.fillMaxWidth()
             )
 
-            botones.forEach { (titulo, icono) ->
-                Button(
-                    onClick = {
-                        when (titulo) {
-                            "Asistencia" -> navController.navigate(Asistencia(registroId))
-                            "Horario" -> navController.navigate(Horario(registroId))
-                            "Notas" -> navController.navigate(Notas(registroId))
-                            "Logros" -> navController.navigate(Logros(registroId))
-                            "Sesiones" -> navController.navigate(Sesiones(materiaId, nombreMateria))
-                            "Evaluaciones Prácticas" -> navController.navigate(EvaluacionesPracticas(materiaId))
-                            "Archivos de Estudio" -> navController.navigate(ArchivosEstudio(materiaId))
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                ) {
-                    Icon(
-                        imageVector = icono,
-                        contentDescription = titulo
-                    )
-                    Text(
-                        text = titulo,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SubjectOptionCard(
+    title: String,
+    description: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedCard(
+        onClick = onClick,
+        modifier = modifier
+            .height(115.dp),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(28.dp)
+            )
+            Column {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = description,
+                    fontSize = 10.sp,
+                    lineHeight = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

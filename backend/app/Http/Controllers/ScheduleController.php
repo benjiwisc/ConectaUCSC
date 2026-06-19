@@ -8,6 +8,22 @@ use App\Models\Schedule;
 
 class ScheduleController extends Controller
 {
+    public function allSchedules(Request $request)
+    {
+        $user = $request->user();
+        $recordIds = \DB::table('usuario_materias')
+            ->join('records', 'usuario_materias.id', '=', 'records.usuario_materia_id')
+            ->where('usuario_materias.user_id', $user->id)
+            ->pluck('records.id')
+            ->toArray();
+
+        $schedules = Schedule::with(['record.usuarioMateria.materia:id,nombre'])
+            ->whereIn('record_id', $recordIds)
+            ->get();
+
+        return response()->json($schedules);
+    }
+
     public function index($recordId) {
         return Schedule::where('record_id', $recordId)->get();
     }

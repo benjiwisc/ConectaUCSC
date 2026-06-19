@@ -25,6 +25,7 @@ Route::get('/carreras/{id}/materias', [MateriaController::class, 'porCarrera']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout',[AuthController::class, 'logout']);
     Route::get('/me',[AuthController::class, 'me']);
+    Route::get('/user/stats',[AuthController::class, 'stats']);
 
     Route::get('/mis-materias',[MateriaController::class, 'misMateria']);
     Route::post('/mis-materias',[MateriaController::class, 'agregar']);
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/sesiones/{id}/finalizar', [SesionEstudioController::class, 'finalizar']);
 
     Route::prefix('horarios')->group(function () {
+        Route::get('/all', [ScheduleController::class, 'allSchedules']);
         Route::get('/{recordId}',[ScheduleController::class, 'index']);
         Route::get('editar/{recordId}',[ScheduleController::class, 'edit']);
         Route::post('/',[ScheduleController::class, 'store']);
