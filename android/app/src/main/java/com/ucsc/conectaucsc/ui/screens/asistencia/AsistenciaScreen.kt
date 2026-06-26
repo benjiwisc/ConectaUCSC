@@ -126,7 +126,7 @@ fun AsistenciaScreen(
                                     .height(IntrinsicSize.Min),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                // Left border colored bar (Crimson/Navy)
+                                
                                 Box(
                                     modifier = Modifier
                                         .width(6.dp)
@@ -144,7 +144,7 @@ fun AsistenciaScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                                     ) {
-                                        // Left Icon container
+                                        
                                         Box(
                                             modifier = Modifier
                                                 .size(40.dp)
@@ -162,7 +162,7 @@ fun AsistenciaScreen(
                                             )
                                         }
 
-                                        // Content Details
+                                        
                                         Column(
                                             modifier = Modifier.weight(1f)
                                         ) {
@@ -181,7 +181,7 @@ fun AsistenciaScreen(
                                             )
                                         }
 
-                                        // Right status badge
+                                        
                                         SuggestionChip(
                                             onClick = {},
                                             label = { Text(text = asistencia.estado, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
@@ -195,13 +195,13 @@ fun AsistenciaScreen(
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    // Action buttons row
+                                    
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.End,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        // Cancelar button (justifies attendance)
+                                        
                                         OutlinedButton(
                                             onClick = {
                                                 AsistenciasViewModel.justificarAsistencia(
@@ -217,7 +217,7 @@ fun AsistenciaScreen(
 
                                         Spacer(modifier = Modifier.width(6.dp))
 
-                                        // Edit button
+                                        
                                         OutlinedButton(
                                             onClick = {
                                                 AsistenciasViewModel.updateAsistencia(
@@ -235,7 +235,7 @@ fun AsistenciaScreen(
 
                                         Spacer(modifier = Modifier.width(6.dp))
 
-                                        // Delete button
+                                        
                                         OutlinedButton(
                                             onClick = {
                                                 AsistenciasViewModel.deleteAsistencia(

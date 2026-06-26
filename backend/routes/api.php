@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\SesionEstudioController;
 use App\Http\Controllers\Api\PracticalEvaluationController;
 use App\Http\Controllers\Api\FileManagementController;
 
-// Rutas públicas
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 Route::get('/facultades', [FacultadController::class, 'index']);
@@ -21,7 +21,7 @@ Route::get('/facultades/{id}/carreras', [FacultadController::class, 'carreras'])
 Route::get('/carreras/{id}/materias', [MateriaController::class, 'porCarrera']);
 
 
-// Rutas protegidas
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout',[AuthController::class, 'logout']);
     Route::get('/me',[AuthController::class, 'me']);

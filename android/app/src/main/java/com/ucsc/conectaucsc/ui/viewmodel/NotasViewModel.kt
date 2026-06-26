@@ -47,7 +47,7 @@ class NotasViewModel @Inject constructor(
             repository.getNotaNecesaria(recordId, notaAprobacion).onSuccess {
                 _notaNecesaria.value = it
             }.onFailure {
-                // Se ignora silenciosamente si falla para no arruinar la carga de notas
+                
             }
             _isLoading.value = false
         }

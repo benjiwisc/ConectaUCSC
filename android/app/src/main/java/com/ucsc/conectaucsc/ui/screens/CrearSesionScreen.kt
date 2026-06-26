@@ -52,7 +52,7 @@ fun CrearSesionScreen(
         }
     }
 
-    // Date y Time picker
+    
     val calendar = Calendar.getInstance()
     val datePicker = DatePickerDialog(
         context,

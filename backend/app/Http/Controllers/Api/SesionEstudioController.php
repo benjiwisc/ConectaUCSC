@@ -14,12 +14,12 @@ class SesionEstudioController extends Controller
         return $sesion->participantes()->where('user_id', $user->id)->exists();
     }
 
-    // Listar sesiones por materia
+    
     public function porMateria(Request $request, $materiaId)
     {
         $user = $request->user();
 
-        // Verificar que el usuario cursa esa materia
+        
         if (!$user->materias()->where('materia_id', $materiaId)->exists()) {
             return response()->json([
                 'message' => 'No tienes acceso a las sesiones de esta materia'
@@ -34,7 +34,7 @@ class SesionEstudioController extends Controller
         return response()->json($sesiones);
     }
 
-    // Crear sesión
+    
     public function crear(Request $request)
     {
         $request->validate([
@@ -45,7 +45,7 @@ class SesionEstudioController extends Controller
             'materia_id'  => 'required|exists:materias,id',
         ]);
 
-        // Verificar que el usuario cursa esa materia
+        
         $user = $request->user();
         if (!$user->materias()->where('materia_id', $request->materia_id)->exists()) {
             return response()->json([
@@ -62,10 +62,10 @@ class SesionEstudioController extends Controller
             'user_id'     => $user->id,
         ]);
 
-        // El creador se une automáticamente
+        
         $sesion->participantes()->attach($user->id);
 
-        // Crear evento en Google Calendar
+        
         $sesion->load(['creador:id,name,email', 'participantes:id,name,email']);
         $eventId = \App\Services\GoogleCalendarService::createEvent($sesion);
         if ($eventId) {
@@ -75,7 +75,7 @@ class SesionEstudioController extends Controller
         return response()->json($sesion->load(['creador:id,name', 'participantes:id,name']), 201);
     }
 
-    // Unirse a una sesión
+    
     public function unirse(Request $request, $sesionId)
     {
         $user = $request->user();
@@ -87,14 +87,14 @@ class SesionEstudioController extends Controller
 
         $sesion->participantes()->attach($user->id);
 
-        // Sincronizar participantes en Google Calendar
+        
         $sesion->load(['participantes:id,name,email']);
         \App\Services\GoogleCalendarService::syncEvent($sesion);
 
         return response()->json(['message' => 'Te has unido a la sesión correctamente']);
     }
 
-    // Mis sesiones creadas
+    
     public function misSesiones(Request $request)
     {
         $sesiones = SesionEstudio::with(['materia:id,nombre', 'participantes:id,name'])
@@ -105,7 +105,7 @@ class SesionEstudioController extends Controller
         return response()->json($sesiones);
     }
     
-    // Salirse de una sesión
+    
     public function salirse(Request $request, $sesionId)
     {
         $user = $request->user();
@@ -119,14 +119,14 @@ class SesionEstudioController extends Controller
 
         $sesion->participantes()->detach($user->id);
 
-        // Sincronizar participantes en Google Calendar
+        
         $sesion->load(['participantes:id,name,email']);
         \App\Services\GoogleCalendarService::syncEvent($sesion);
 
         return response()->json(['message' => 'Has abandonado la sesión']);
     }
 
-    // Finalizar sesión (solo el creador)
+    
     public function finalizar(Request $request, $sesionId)
     {
         $user = $request->user();
@@ -142,7 +142,7 @@ class SesionEstudioController extends Controller
         $sesion->mensajes()->delete();
         $sesion->delete();
 
-        // Eliminar evento en Google Calendar si existe
+        
         if ($googleEventId) {
             \App\Services\GoogleCalendarService::deleteEvent($googleEventId);
         }
@@ -150,7 +150,7 @@ class SesionEstudioController extends Controller
         return response()->json(['message' => 'Sesión finalizada y eliminada correctamente']);
     }
 
-    // Listar y filtrar todas las sesiones de las materias del usuario
+    
     public function filtrar(Request $request)
     {
         $user = $request->user();
@@ -159,7 +159,7 @@ class SesionEstudioController extends Controller
         $query = SesionEstudio::with(['creador:id,name', 'participantes:id,name', 'materia:id,nombre'])
             ->whereIn('materia_id', $materiaIds);
 
-        // Buscar por título, ayudante (creador) o nombre del ramo (materia)
+        
         if ($request->has('buscar') && !empty($request->buscar)) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
@@ -173,7 +173,7 @@ class SesionEstudioController extends Controller
             });
         }
 
-        // Ordenar por fecha_hora
+        
         $orden = $request->query('orden', 'recientes');
         if ($orden === 'antiguos') {
             $query->orderBy('fecha_hora', 'asc');
@@ -185,7 +185,7 @@ class SesionEstudioController extends Controller
         return response()->json($sesiones);
     }
 
-    // Listar mensajes de una sesión
+    
     public function mensajes(Request $request, $sesionId)
     {
         $user = $request->user();
@@ -205,7 +205,7 @@ class SesionEstudioController extends Controller
         return response()->json($mensajes);
     }
 
-    // Enviar mensaje al chat de la sesión
+    
     public function enviarMensaje(Request $request, $sesionId)
     {
         $request->validate([

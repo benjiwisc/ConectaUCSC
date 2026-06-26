@@ -107,7 +107,7 @@ fun PerfilScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // User Avatar / Initials
+                
                 val initials = remember(user?.name) {
                     user?.name?.split(" ")
                         ?.mapNotNull { it.firstOrNull()?.toString() }
@@ -148,7 +148,7 @@ fun PerfilScreen(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Academic Info Card
+                
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -169,14 +169,14 @@ fun PerfilScreen(
 
                         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
-                        // Carrera detail row
+                        
                         InfoRow(
                             icon = Icons.Default.School,
                             label = "Carrera",
                             value = user?.carrera?.nombre ?: "No registrada"
                         )
 
-                        // Facultad detail row
+                        
                         InfoRow(
                             icon = Icons.Default.Info,
                             label = "Facultad",
@@ -185,7 +185,7 @@ fun PerfilScreen(
                     }
                 }
 
-                // Statistics Section Title
+                
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -198,12 +198,12 @@ fun PerfilScreen(
                     )
                 }
 
-                // Grid or Row of stats
+                
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Enrolled subjects stat card
+                    
                     StatCard(
                         modifier = Modifier.weight(1f),
                         value = (userStats?.materias_count ?: 0).toString(),
@@ -213,7 +213,7 @@ fun PerfilScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
 
-                    // GPA stat card
+                    
                     val gpa = userStats?.promedio_general ?: 0.0
                     val gpaText = if (gpa > 0.0) String.format("%.1f", gpa) else "S/N"
                     StatCard(
@@ -225,7 +225,7 @@ fun PerfilScreen(
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer
                     )
 
-                    // Sessions attended stat card
+                    
                     StatCard(
                         modifier = Modifier.weight(1f),
                         value = (userStats?.sesiones_count ?: 0).toString(),

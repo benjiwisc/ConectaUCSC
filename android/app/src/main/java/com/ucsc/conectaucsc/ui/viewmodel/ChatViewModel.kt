@@ -41,12 +41,12 @@ class ChatViewModel @Inject constructor(
 
         viewModelScope.launch {
             repository.enviarMensaje(sesionId, contenido).onSuccess { nuevoMensaje ->
-                // Actualizamos la lista local inmediatamente para que el usuario vea su mensaje
+                
                 val listaActualizada = _mensajes.value.toMutableList()
                 listaActualizada.add(nuevoMensaje)
                 _mensajes.value = listaActualizada
                 
-                // Opcional: Recargar de todas formas para sincronizar con otros usuarios
+                
                 cargarMensajes(sesionId)
             }.onFailure {
                 _mensajeError.value = it.message

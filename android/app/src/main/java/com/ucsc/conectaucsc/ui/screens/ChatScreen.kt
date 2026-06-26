@@ -45,7 +45,7 @@ fun ChatScreen(
         chatViewModel.cargarMensajes(sesionId)
     }
 
-    // Mostrar errores del servidor (Laravel)
+    
     LaunchedEffect(error) {
         error?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
@@ -53,7 +53,7 @@ fun ChatScreen(
         }
     }
 
-    // Scroll automático al final cuando hay mensajes nuevos
+    
     LaunchedEffect(mensajes.size) {
         if (mensajes.isNotEmpty()) {
             listState.animateScrollToItem(mensajes.size - 1)

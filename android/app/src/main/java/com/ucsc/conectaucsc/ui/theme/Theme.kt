@@ -58,7 +58,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ConectaUCSCTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Set to false by default to enforce brand color consistency
+    
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

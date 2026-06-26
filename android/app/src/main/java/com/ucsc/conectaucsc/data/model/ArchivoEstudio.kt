@@ -19,7 +19,7 @@ data class ArchivoEstudio(
     @SerializedName("creador")
     val creador: User? = null
 ) {
-    // Función para obtener el nombre mostrando "Mí" si el ID coincide
+    
     fun getNombreMostrar(currentUserId: Int, currentUserName: String): String {
         return if (user_id == currentUserId) {
             "$currentUserName (Tú)"

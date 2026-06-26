@@ -11,14 +11,14 @@ use Illuminate\Http\Request;
 
 class MateriaController extends Controller
 {
-    // Listar materias disponibles por carrera
+    
     public function porCarrera($carreraId)
     {
         $materias = Materia::where('carrera_id', $carreraId)->get();
         return response()->json($materias);
     }
 
-    // Listar materias que cursa el usuario
+    
     public function misMateria(Request $request)
     {
         $materias = $request->user()->materias()->get();
@@ -36,7 +36,7 @@ class MateriaController extends Controller
         return response()->json($materias);
     }
 
-    // Agregar materia al usuario
+    
     public function agregar(Request $request)
     {
         $request->validate([
@@ -79,7 +79,7 @@ class MateriaController extends Controller
         return response()->json(['message' => 'Materia agregada correctamente']);
     }
 
-    // Eliminar materia del usuario
+    
     public function eliminar(Request $request, $materiaId)
     {
         $request->user()->materias()->detach($materiaId);

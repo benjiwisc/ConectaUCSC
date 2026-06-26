@@ -193,7 +193,7 @@ fun AddHorarioScreen(
                     readOnly = true,
                     label = { Text("Hora inicio") },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors() // Mantiene colores normales
+                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors() 
                 )
                 Box(
                     modifier = Modifier

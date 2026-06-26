@@ -75,7 +75,7 @@ fun HomeScreen(
         todosHorarios.filter { it.dia.lowercase() == todayDayOfWeek }
     }
 
-    // Unified agenda items (study sessions + class schedules) sorted chronologically
+    
     val unifiedAgenda = remember(todaySesiones, todaySchedules, currentUserId) {
         val sessionsItems = todaySesiones.map { sesion ->
             val hora = if (sesion.fecha_hora.length >= 16) {
@@ -124,7 +124,7 @@ fun HomeScreen(
         (sessionsItems + classItems).sortedBy { it.hora }
     }
 
-    // Fetch study sessions and class schedules on launch
+    
     LaunchedEffect(Unit) {
         sesionViewModel.cargarTodasSesiones()
         horariosViewModel.cargarTodosHorarios()
@@ -175,7 +175,7 @@ fun HomeScreen(
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Header Section
+            
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -202,12 +202,12 @@ fun HomeScreen(
                 )
             }
 
-            // Grid Dashboard Section
+            
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Row 1
+                
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -236,7 +236,7 @@ fun HomeScreen(
                     )
                 }
 
-                // Row 2 (Full Width)
+                
                 FeatureCard(
                     title = "Mi Perfil",
                     description = "Administra la información de tu carrera y cuenta",
@@ -248,7 +248,7 @@ fun HomeScreen(
                 )
             }
 
-            // Today's Agenda Section (Resolves "Screen looks empty")
+            
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Hoy en tu Agenda",
@@ -322,7 +322,7 @@ fun HomeScreen(
                                         .height(IntrinsicSize.Min),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    // Vertical colored indicator bar matching the event role color
+                                    
                                     Box(
                                         modifier = Modifier
                                             .width(6.dp)
@@ -337,7 +337,7 @@ fun HomeScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
-                                        // Left Icon Container with colored circle matching badge color
+                                        
                                         Box(
                                             modifier = Modifier
                                                 .size(38.dp)
@@ -355,7 +355,7 @@ fun HomeScreen(
                                             )
                                         }
 
-                                        // Content Details Column
+                                        
                                         Column(
                                             modifier = Modifier.weight(1f)
                                         ) {
@@ -380,13 +380,13 @@ fun HomeScreen(
 
                                             Spacer(modifier = Modifier.height(6.dp))
 
-                                            // Time & Location Details
+                                            
                                             Row(
                                                 verticalAlignment = Alignment.CenterVertically,
                                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                                 modifier = Modifier.fillMaxWidth()
                                             ) {
-                                                // Time
+                                                
                                                 Row(
                                                     verticalAlignment = Alignment.CenterVertically,
                                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -404,7 +404,7 @@ fun HomeScreen(
                                                     )
                                                 }
 
-                                                // Location/Subject
+                                                
                                                 val detailText = if (item.tipo == "clase") item.lugar else item.materiaNombre
                                                 if (!detailText.isNullOrBlank()) {
                                                     Row(
@@ -510,7 +510,7 @@ data class AgendaItem(
     val hora: String,
     val materiaNombre: String,
     val lugar: String,
-    val tipo: String, // "clase" o "sesion"
-    val subtipo: String?, // e.g. "Cátedra", "Laboratorio", "Organizador", "Participante"
+    val tipo: String, 
+    val subtipo: String?, 
     val originalObject: Any
 )

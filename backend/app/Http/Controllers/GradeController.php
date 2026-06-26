@@ -19,9 +19,9 @@ class GradeController extends Controller
     public function store(Request $request) {
         $nota = $request->input('nota');
         if ($nota !== null) {
-            // Reemplazar coma por punto decimal
+            
             $nota = str_replace(',', '.', $nota);
-            // Si el valor es numérico y mayor a 7.0 (por ejemplo 70, 55, 40), dividir por 10
+            
             if (is_numeric($nota) && floatval($nota) > 7.0) {
                 $nota = floatval($nota) / 10;
             }
@@ -42,9 +42,9 @@ class GradeController extends Controller
         $grade = Grade::findOrFail($id);
         $nota = $request->input('nota');
         if ($nota !== null) {
-            // Reemplazar coma por punto decimal
+            
             $nota = str_replace(',', '.', $nota);
-            // Si el valor es numérico y mayor a 7.0, dividir por 10
+            
             if (is_numeric($nota) && floatval($nota) > 7.0) {
                 $nota = floatval($nota) / 10;
             }
@@ -65,19 +65,19 @@ class GradeController extends Controller
         return response()->json(['message' => 'Nota eliminada correctamente']);
     }
 
-    // promedio de notas del record
+    
     public function promedio($recordId) {
         $promedio = Grade::where('record_id', $recordId)->avg('nota');
         return response()->json(['promedio' => round($promedio, 1)]);
     }
 
-    // calcula la nota necesaria para aprobar el ramo (con nota 4.0 por defecto o personalizada)
+    
     public function notaNecesaria(Request $request, $recordId) {
         $grades = Grade::where('record_id', $recordId)->get();
 
         $sumaPorcentajes = $grades->sum('porcentaje');
         
-        // Calcular la nota acumulada ponderada
+        
         $notaAcumulada = $grades->sum(function ($grade) {
             return $grade->nota * ($grade->porcentaje / 100);
         });
@@ -96,7 +96,7 @@ class GradeController extends Controller
         $estado = 'cursando';
 
         if ($porcentajeRestante <= 0) {
-            // Ya se ingresó el 100% de las ponderaciones
+            
             if ($notaAcumulada >= $notaAprobacion) {
                 $estado = 'aprobado';
                 $notaNecesaria = 1.0;
@@ -105,16 +105,16 @@ class GradeController extends Controller
                 $notaNecesaria = null;
             }
         } else {
-            // Falta porcentaje por evaluar
+            
             $calculo = ($notaAprobacion - $notaAcumulada) / ($porcentajeRestante / 100);
             $calculo = round($calculo, 1);
 
             if ($calculo <= 1.0) {
-                $notaNecesaria = 1.0; // Nota mínima en Chile
-                $estado = 'aprobado'; // Ya está aprobado matemáticamente
+                $notaNecesaria = 1.0; 
+                $estado = 'aprobado'; 
             } elseif ($calculo > 7.0) {
-                $notaNecesaria = $calculo; // Guardamos el cálculo para información
-                $estado = 'reprobado'; // Es matemáticamente imposible aprobar
+                $notaNecesaria = $calculo; 
+                $estado = 'reprobado'; 
             } else {
                 $notaNecesaria = $calculo;
                 $estado = 'cursando';

@@ -40,7 +40,7 @@ fun DetalleCuestionarioScreen(
         viewModel.cargarDetalleEvaluacion(evaluationId)
     }
 
-    // Mostrar mensajes del servidor (errores o éxito)
+    
     LaunchedEffect(mensaje) {
         mensaje?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
@@ -66,7 +66,7 @@ fun DetalleCuestionarioScreen(
             } else if (evaluation != null) {
                 val eval = evaluation!!
                 
-                // Si ya tiene nota o está marcada como hecha, mostramos resultados
+                
                 if (eval.hecha || eval.nota != null || eval.completion != null) {
                     ResultadosView(eval)
                 } else {
@@ -88,7 +88,7 @@ fun DetalleCuestionarioScreen(
                 }
             }
             
-            // Overlay de carga al enviar
+            
             if (isLoading && evaluation != null) {
                 Surface(
                     color = Color.Black.copy(alpha = 0.1f),
@@ -160,7 +160,7 @@ fun CuestionarioView(
 
 @Composable
 fun ResultadosView(eval: PracticalEvaluationDto) {
-    // Usamos los campos del objeto directamente si completion es nulo
+    
     val nota = eval.completion?.nota ?: eval.nota ?: 0.0
     val correctas = eval.completion?.correctas ?: eval.correctas ?: 0
     val total = eval.completion?.total_preguntas ?: eval.total_preguntas ?: (eval.contenido?.size ?: 0)
@@ -222,8 +222,8 @@ fun ResultadosView(eval: PracticalEvaluationDto) {
                             val isCorrect = alternativa.correcta == true
                             
                             val textColor = when {
-                                isCorrect -> Color(0xFF4CAF50) // Verde: Es la correcta
-                                isSelected && !isCorrect -> MaterialTheme.colorScheme.error // Rojo: Elegiste esta y está mal
+                                isCorrect -> Color(0xFF4CAF50) 
+                                isSelected && !isCorrect -> MaterialTheme.colorScheme.error 
                                 else -> MaterialTheme.colorScheme.onSurfaceVariant
                             }
 

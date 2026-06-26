@@ -64,7 +64,7 @@ fun EvaluacionesPracticasScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { 
-                // Navega directamente a la creación de cuestionario
+                
                 navController.navigate(CrearCuestionario(materiaId))
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Nueva Evaluación")
@@ -135,7 +135,7 @@ fun EvaluacionCard(
                 .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left border colored bar
+            
             Box(
                 modifier = Modifier
                     .width(6.dp)
@@ -148,13 +148,13 @@ fun EvaluacionCard(
                     .weight(1f)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                // Top section: Icon, Title, Badge
+                
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Left Icon container
+                    
                     Box(
                         modifier = Modifier
                             .size(40.dp)
@@ -172,7 +172,7 @@ fun EvaluacionCard(
                         )
                     }
 
-                    // Title details
+                    
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -190,7 +190,7 @@ fun EvaluacionCard(
                         )
                     }
 
-                    // Suggestion Chip status
+                    
                     val statusText = when {
                         evaluation.tipo == "pdf" -> "PDF disponible"
                         evaluation.hecha -> "Resuelto"
@@ -215,7 +215,7 @@ fun EvaluacionCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 
-                // Nota / result representation if made
+                
                 if (evaluation.hecha && evaluation.completion != null) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Surface(
@@ -235,7 +235,7 @@ fun EvaluacionCard(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Actions row at base
+                
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,

@@ -151,7 +151,7 @@ fun HorarioScreen(
                                     .height(IntrinsicSize.Min),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                // Left border colored bar (Gold)
+                                
                                 Box(
                                     modifier = Modifier
                                         .width(6.dp)
@@ -169,7 +169,7 @@ fun HorarioScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                                     ) {
-                                        // Left Icon container
+                                        
                                         Box(
                                             modifier = Modifier
                                                 .size(40.dp)
@@ -187,7 +187,7 @@ fun HorarioScreen(
                                             )
                                         }
 
-                                        // Content Details
+                                        
                                         Column(
                                             modifier = Modifier.weight(1f)
                                         ) {
@@ -214,13 +214,13 @@ fun HorarioScreen(
 
                                     Spacer(modifier = Modifier.height(10.dp))
 
-                                    // Time & Room Row
+                                    
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
-                                        // Time
+                                        
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -240,7 +240,7 @@ fun HorarioScreen(
                                             )
                                         }
 
-                                        // Room
+                                        
                                         horario.sala?.let { sala ->
                                             if (sala.isNotBlank()) {
                                                 Row(
@@ -265,7 +265,7 @@ fun HorarioScreen(
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    // Action buttons row
+                                    
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.End,

@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class GoogleCalendarService
 {
-    /**
-     * Obtiene el cliente de Google configurado con OAuth 2.0 y el Refresh Token.
-     */
+    
+
+
     protected static function getGoogleClient()
     {
         $clientId = env('GOOGLE_CLIENT_ID');
@@ -33,7 +33,7 @@ class GoogleCalendarService
             $client->addScope(Calendar::CALENDAR);
             $client->setAccessType('offline');
 
-            // Autenticar usando el refresh token y establecer el token de acceso
+            
             $accessToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
             $client->setAccessToken($accessToken);
             
@@ -44,9 +44,9 @@ class GoogleCalendarService
         }
     }
 
-    /**
-     * Crea un evento en Google Calendar para una sesión de estudio.
-     */
+    
+
+
     public static function createEvent(SesionEstudio $sesion)
     {
         $client = self::getGoogleClient();
@@ -57,11 +57,11 @@ class GoogleCalendarService
         try {
             $service = new Calendar($client);
 
-            // Tiempos de inicio y fin (duración por defecto de 1.5 horas)
+            
             $startTime = Carbon::parse($sesion->fecha_hora);
             $endTime = (clone $startTime)->addHours(1)->addMinutes(30);
 
-            // Obtener correos de los participantes (filtrando el del sistema para evitar auto-invitación)
+            
             $systemEmail = env('GOOGLE_SYSTEM_EMAIL');
             $attendees = [];
             $participantes = $sesion->participantes()->select('email')->get();
@@ -95,8 +95,8 @@ class GoogleCalendarService
                 ],
             ]);
 
-            // Insertar el evento en el calendario principal ('primary' mapea al del usuario autenticado)
-            // sendUpdates => 'all' envía las invitaciones por correo a los asistentes
+            
+            
             $createdEvent = $service->events->insert('primary', $event, ['sendUpdates' => 'all']);
 
             return $createdEvent->getId();
@@ -106,9 +106,9 @@ class GoogleCalendarService
         }
     }
 
-    /**
-     * Sincroniza los participantes de una sesión en el evento de Google Calendar.
-     */
+    
+
+
     public static function syncEvent(SesionEstudio $sesion)
     {
         if (empty($sesion->google_event_id)) {
@@ -127,10 +127,10 @@ class GoogleCalendarService
         try {
             $service = new Calendar($client);
 
-            // Obtener el evento actual de Google Calendar
+            
             $event = $service->events->get('primary', $sesion->google_event_id);
 
-            // Obtener correos actuales de los participantes (filtrando el del sistema)
+            
             $systemEmail = env('GOOGLE_SYSTEM_EMAIL');
             $attendees = [];
             $participantes = $sesion->participantes()->select('email')->get();
@@ -140,10 +140,10 @@ class GoogleCalendarService
                 }
             }
 
-            // Actualizar invitados
+            
             $event->setAttendees($attendees);
 
-            // Actualizar otros metadatos si han cambiado
+            
             $tutorName = $sesion->creador ? $sesion->creador->name : 'Sin tutor';
             $event->setSummary('Tutoría: ' . $sesion->titulo . ' (Tutor: ' . $tutorName . ')');
             $event->setLocation($sesion->lugar);
@@ -161,7 +161,7 @@ class GoogleCalendarService
                 'timeZone' => config('app.timezone', 'America/Santiago'),
             ]));
 
-            // Guardar cambios y notificar a los nuevos/removidos
+            
             $service->events->update('primary', $sesion->google_event_id, $event, ['sendUpdates' => 'all']);
 
         } catch (\Exception $e) {
@@ -169,9 +169,9 @@ class GoogleCalendarService
         }
     }
 
-    /**
-     * Elimina el evento de Google Calendar.
-     */
+    
+
+
     public static function deleteEvent($googleEventId)
     {
         if (empty($googleEventId)) {
@@ -185,7 +185,7 @@ class GoogleCalendarService
 
         try {
             $service = new Calendar($client);
-            // sendUpdates => 'all' notifica a los invitados que el evento fue cancelado
+            
             $service->events->delete('primary', $googleEventId, ['sendUpdates' => 'all']);
         } catch (\Exception $e) {
             Log::error('Google Calendar API: Error al eliminar el evento ' . $googleEventId . ': ' . $e->getMessage());

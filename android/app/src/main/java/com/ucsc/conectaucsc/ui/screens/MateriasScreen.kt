@@ -45,14 +45,14 @@ fun MateriasScreen(
     var materiaSeleccionada by remember { mutableStateOf<com.ucsc.conectaucsc.data.model.Materia?>(null) }
     var dropdownExpanded by remember { mutableStateOf(false) }
 
-    // Cargar materias del usuario al entrar
+    
     LaunchedEffect(Unit) {
         materiaViewModel.cargarMisMaterias()
-        // Cargar materias disponibles según la carrera del usuario
-        // Por ahora cargamos con carrera_id hardcodeado, luego lo conectamos al perfil
+        
+        
     }
 
-    // Mostrar mensajes
+    
     LaunchedEffect(mensaje) {
         mensaje?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -76,7 +76,7 @@ fun MateriasScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // Cargar materias disponibles de la carrera del usuario
+                
                 val carreraId = authViewModel.getCarreraId()
                 if (carreraId != null) {
                     materiaViewModel.cargarMateriasDisponibles(carreraId)
@@ -122,7 +122,7 @@ fun MateriasScreen(
                                 .height(IntrinsicSize.Min),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Left border colored bar matching primary color (Crimson)
+                            
                             Box(
                                 modifier = Modifier
                                     .width(6.dp)
@@ -137,7 +137,7 @@ fun MateriasScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                // School icon container
+                                
                                 Box(
                                     modifier = Modifier
                                         .size(40.dp)
@@ -155,7 +155,7 @@ fun MateriasScreen(
                                     )
                                 }
 
-                                // Subject Text details
+                                
                                 Column(
                                     modifier = Modifier.weight(1f)
                                 ) {
@@ -173,7 +173,7 @@ fun MateriasScreen(
                                     )
                                 }
 
-                                // Actions section
+                                
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -202,7 +202,7 @@ fun MateriasScreen(
         }
     }
 
-    // Dialog para agregar materia
+    
     if (mostrarDialog) {
         AlertDialog(
             onDismissRequest = { mostrarDialog = false },

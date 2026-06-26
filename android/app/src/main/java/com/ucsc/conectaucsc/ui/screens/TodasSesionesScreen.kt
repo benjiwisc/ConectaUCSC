@@ -49,9 +49,9 @@ fun TodasSesionesScreen(
     val mensajeMateria by materiaViewModel.mensaje.collectAsState()
 
     var buscarText by remember { mutableStateOf("") }
-    var ordenSeleccionado by remember { mutableStateOf("antiguos") } // "antiguos" (Más cercanas) or "recientes" (Más lejanas)
+    var ordenSeleccionado by remember { mutableStateOf("antiguos") } 
 
-    // Local filter states
+    
     var selectedSubjectId by remember { mutableStateOf<Int?>(null) }
     var showOnlyMySessions by remember { mutableStateOf(false) }
     var showOnlyMyCreatedSessions by remember { mutableStateOf(false) }
@@ -60,7 +60,7 @@ fun TodasSesionesScreen(
     var showSubjectDropdown by remember { mutableStateOf(false) }
     var showSubjectSelectorDialog by remember { mutableStateOf(false) }
 
-    // Load initial sessions and subjects
+    
     LaunchedEffect(ordenSeleccionado) {
         sesionViewModel.cargarTodasSesiones(buscar = buscarText.ifEmpty { null }, orden = ordenSeleccionado)
     }
@@ -69,7 +69,7 @@ fun TodasSesionesScreen(
         materiaViewModel.cargarMisMaterias()
     }
 
-    // Effect for showing Toast messages and updating UI
+    
     LaunchedEffect(mensajeSesion) {
         mensajeSesion?.let {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -85,7 +85,7 @@ fun TodasSesionesScreen(
         }
     }
 
-    // Client-side filtering logic
+    
     val filteredSesiones = remember(
         sesiones,
         selectedSubjectId,
@@ -95,23 +95,23 @@ fun TodasSesionesScreen(
         userId
     ) {
         sesiones.filter { sesion ->
-            // 1. Subject filter
+            
             val matchesSubject = selectedSubjectId == null || sesion.materia_id == selectedSubjectId
 
-            // 2. Created by me filter
-            // If showOnlyMyCreatedSessions is true, show only my created sessions.
-            // If showOnlyMyCreatedSessions is false, hide my created sessions from the general list.
+            
+            
+            
             val matchesCreated = if (showOnlyMyCreatedSessions) {
                 sesion.user_id == userId
             } else {
                 sesion.user_id != userId
             }
 
-            // 3. My Enrolled Sessions (where I am a participant but NOT the creator)
+            
             val matchesMySessions = !showOnlyMySessions ||
                     (sesion.participantes?.any { it.id == userId } == true && sesion.user_id != userId)
 
-            // 4. Active (upcoming) vs Past
+            
             val matchesActive = !showOnlyActiveSessions || run {
                 val currentDateTimeString = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
                 val sessionDateTimeClean = sesion.fecha_hora.replace("T", " ").substringBefore(".")
@@ -158,7 +158,7 @@ fun TodasSesionesScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            // Search Input
+            
             OutlinedTextField(
                 value = buscarText,
                 onValueChange = {
@@ -181,7 +181,7 @@ fun TodasSesionesScreen(
                 singleLine = true
             )
 
-            // Combined Filter and Sort Row
+            
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -189,7 +189,7 @@ fun TodasSesionesScreen(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                // Dropdown Subject Selector
+                
                 item {
                     val selectedSubjectName = misMaterias.find { it.id == selectedSubjectId }?.nombre ?: "Todos los ramos"
                     Box {
@@ -223,7 +223,7 @@ fun TodasSesionesScreen(
                     }
                 }
 
-                // Active sessions toggle (true by default)
+                
                 item {
                     FilterChip(
                         selected = showOnlyActiveSessions,
@@ -232,7 +232,7 @@ fun TodasSesionesScreen(
                     )
                 }
 
-                // Enrolled sessions toggle
+                
                 item {
                     FilterChip(
                         selected = showOnlyMySessions,
@@ -246,7 +246,7 @@ fun TodasSesionesScreen(
                     )
                 }
 
-                // Created sessions toggle
+                
                 item {
                     FilterChip(
                         selected = showOnlyMyCreatedSessions,
@@ -260,7 +260,7 @@ fun TodasSesionesScreen(
                     )
                 }
 
-                // Sort toggle (Single Chip)
+                
                 item {
                     val labelText = if (ordenSeleccionado == "antiguos") "Más cercanas" else "Más lejanas"
                     FilterChip(
@@ -275,7 +275,7 @@ fun TodasSesionesScreen(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Sessions List
+            
             if (isLoadingSesiones || isLoadingMaterias) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()

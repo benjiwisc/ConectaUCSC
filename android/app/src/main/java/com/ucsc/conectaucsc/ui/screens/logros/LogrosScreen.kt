@@ -129,7 +129,7 @@ fun CardLogroItem(logro: Attainment) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Cumplido",
-                        tint = Color(0xFF2E7D32), // Verde oscuro
+                        tint = Color(0xFF2E7D32), 
                         modifier = Modifier.size(28.dp)
                     )
                 } else {

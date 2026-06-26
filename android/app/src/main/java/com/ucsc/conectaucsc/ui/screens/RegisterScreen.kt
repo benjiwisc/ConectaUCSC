@@ -88,7 +88,7 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavController) {
             singleLine = true
         )
 
-        // Dropdown Facultad
+        
         ExposedDropdownMenuBox(
             expanded = facultadExpanded,
             onExpandedChange = { facultadExpanded = it },
@@ -120,7 +120,7 @@ fun RegisterScreen(viewModel: AuthViewModel, navController: NavController) {
             }
         }
 
-        // Dropdown Carrera
+        
         ExposedDropdownMenuBox(
             expanded = carreraExpanded,
             onExpandedChange = { if (selectedFacultad != null) carreraExpanded = it },

@@ -60,7 +60,7 @@ fun RegistroMateriaScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header Info
+            
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,8 +80,8 @@ fun RegistroMateriaScreen(
                 )
             }
 
-            // Grid Layout (Rows of 2 columns)
-            // Row 1: Clases
+            
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -104,7 +104,7 @@ fun RegistroMateriaScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Row 2: Académico
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -127,7 +127,7 @@ fun RegistroMateriaScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Row 3: Estudio
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -150,7 +150,7 @@ fun RegistroMateriaScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Row 4: Logros (Full Width)
+            
             SubjectOptionCard(
                 title = "Logros y Metas",
                 description = "Monitorea tus insignias y metas obtenidas para este ramo",

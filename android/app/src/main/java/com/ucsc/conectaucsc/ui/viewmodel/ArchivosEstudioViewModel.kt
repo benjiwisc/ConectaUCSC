@@ -76,7 +76,7 @@ class ArchivosEstudioViewModel @Inject constructor(
                 }
 
                 val requestFile = fileData.first.toRequestBody(fileData.third.toMediaTypeOrNull())
-                // CAMBIO: Se cambió "file" por "archivo" para coincidir con el backend de Laravel
+                
                 val body = MultipartBody.Part.createFormData("archivo", fileData.second, requestFile)
 
                 repository.uploadArchivo(materiaId, titulo, descripcion, body).onSuccess {

@@ -175,7 +175,7 @@ fun SesionCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // El botón de chat se muestra a la izquierda si es creador o ya participa
+                
                 if (yaParticipa || esCreador) {
                     OutlinedButton(
                         onClick = onChatClick,
