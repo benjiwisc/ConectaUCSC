@@ -1,6 +1,7 @@
 package com.ucsc.conectaucsc.ui.screens.horario
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
@@ -36,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ucsc.conectaucsc.data.model.Schedule
 import com.ucsc.conectaucsc.ui.viewmodel.HorariosViewModel
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +65,9 @@ fun EditHorarioScreen(
     var diaExpanded by remember { mutableStateOf(false) }
     var tipoExpanded by remember { mutableStateOf(false) }
 
+    var showInicioTimePicker by remember { mutableStateOf(false) }
+    var showFinTimePicker by remember { mutableStateOf(false) }
+
     val dias = listOf("lunes", "martes", "miércoles", "jueves", "viernes", "sábado")
     val tiposClase = listOf("catedra", "ayudantia", "laboratorio")
 
@@ -76,6 +84,73 @@ fun EditHorarioScreen(
                 navController.popBackStack()
             }
         }
+    }
+
+    fun parseTime(timeStr: String, defaultField: Int): Int {
+        return try {
+            val parts = timeStr.split(":")
+            if (defaultField == Calendar.HOUR_OF_DAY) parts[0].toInt() else parts[1].toInt()
+        } catch (e: Exception) {
+            Calendar.getInstance().get(defaultField)
+        }
+    }
+
+    if (showInicioTimePicker) {
+        val initialHour = parseTime(horaInicio, Calendar.HOUR_OF_DAY)
+        val initialMinute = parseTime(horaInicio, Calendar.MINUTE)
+
+        val timePickerState = rememberTimePickerState(
+            initialHour = initialHour,
+            initialMinute = initialMinute,
+            is24Hour = true
+        )
+
+        AlertDialog(
+            onDismissRequest = { showInicioTimePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    horaInicio = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
+                    showInicioTimePicker = false
+                }) { Text("Aceptar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showInicioTimePicker = false }) { Text("Cancelar") }
+            },
+            text = {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    TimePicker(state = timePickerState)
+                }
+            }
+        )
+    }
+
+    if (showFinTimePicker) {
+        val initialHour = parseTime(horaFin, Calendar.HOUR_OF_DAY)
+        val initialMinute = parseTime(horaFin, Calendar.MINUTE)
+
+        val timePickerState = rememberTimePickerState(
+            initialHour = initialHour,
+            initialMinute = initialMinute,
+            is24Hour = true
+        )
+
+        AlertDialog(
+            onDismissRequest = { showFinTimePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    horaFin = String.format("%02d:%02d", timePickerState.hour, timePickerState.minute)
+                    showFinTimePicker = false
+                }) { Text("Aceptar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showFinTimePicker = false }) { Text("Cancelar") }
+            },
+            text = {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    TimePicker(state = timePickerState)
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -114,18 +189,17 @@ fun EditHorarioScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                // --- Dropdown de Día ---
                 ExposedDropdownMenuBox(
                     expanded = diaExpanded,
                     onExpandedChange = { diaExpanded = it }
                 ) {
                     OutlinedTextField(
-                        value = diaSeleccionado,
+                        value = diaSeleccionado.replaceFirstChar { it.uppercase() },
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Día") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = diaExpanded) },
-                        modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable) // 👈 Actualizado
+                        modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                     )
                     ExposedDropdownMenu(expanded = diaExpanded, onDismissRequest = { diaExpanded = false }) {
                         dias.forEach { dia ->
@@ -140,32 +214,50 @@ fun EditHorarioScreen(
                     }
                 }
 
-                OutlinedTextField(
-                    value = horaInicio,
-                    onValueChange = { horaInicio = it },
-                    label = { Text("Hora inicio (08:10)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = horaInicio,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Hora inicio") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable { showInicioTimePicker = true }
+                    )
+                }
 
-                OutlinedTextField(
-                    value = horaFin,
-                    onValueChange = { horaFin = it },
-                    label = { Text("Hora fin (09:30)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = horaFin,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Hora fin") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable { showFinTimePicker = true }
+                    )
+                }
 
-                // --- Dropdown de Tipo de Clase ---
+
                 ExposedDropdownMenuBox(
                     expanded = tipoExpanded,
                     onExpandedChange = { tipoExpanded = it }
                 ) {
                     OutlinedTextField(
-                        value = tipoSeleccionado,
+                        value = tipoSeleccionado.replaceFirstChar { it.uppercase() },
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Tipo de clase") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = tipoExpanded) },
-                        modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable) // 👈 Actualizado
+                        modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
                     )
                     ExposedDropdownMenu(expanded = tipoExpanded, onDismissRequest = { tipoExpanded = false }) {
                         tiposClase.forEach { tipo ->
